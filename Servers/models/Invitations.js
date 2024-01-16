@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const invitationSchema = new Schema({
-    candidate:{
+    candidate:{ //Employee refer to employee model
         type: Schema.Types.ObjectId,
         ref: 'Employee'
     },
