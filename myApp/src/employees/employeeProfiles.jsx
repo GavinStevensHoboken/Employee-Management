@@ -7,8 +7,17 @@ const EmployeeProfiles = () => {
     const [searchTerm, setSearchTerm] = useState('');
   
     useEffect(() => {
-      // Fetch employees data
-      // setEmployees(fetchedEmployees);
+        // Fetch employees data
+        const fetchData = async () => {
+                try {
+                    const res = await fetch('http://localhost:3000/api/employees');
+                    const fetchedEmployees = await res.json();
+                    setEmployees(fetchedEmployees);
+                } catch (err) {
+                    setError(err);
+                }
+        };
+        fetchData();
     }, []);
   
     const handleSearch = (e) => {
