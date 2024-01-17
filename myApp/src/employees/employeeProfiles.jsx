@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Container, TextField } from '@mui/material';
-import EmployeeList from './employeeList'; // Import the EmployeeList component
+import EmployeeList from './employeeList';
 
 const EmployeeProfiles = () => {
     const [employees, setEmployees] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
   
     useEffect(() => {
-      // Fetch employees data from your backend and set it to state
+      // Fetch employees data
       // setEmployees(fetchedEmployees);
     }, []);
   
@@ -30,7 +30,7 @@ const EmployeeProfiles = () => {
         onChange={handleSearch}
       />
       {/* <EmployeeList employees={filteredEmployees} /> */}
-      <div>Test</div>
+      <div>Need Employees Data</div>
     </Container>
   );
 };
