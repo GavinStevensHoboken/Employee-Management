@@ -13,6 +13,8 @@ import FaceSharpIcon from '@mui/icons-material/FaceSharp';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../actions/authActions';
 
 function Copyright(props) {
     return (
@@ -31,6 +33,8 @@ const defaultTheme = createTheme();
 
 export default function LogIn() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -39,26 +43,7 @@ export default function LogIn() {
             email: data.get('email'),
             password: data.get('password')
         };
-
-        try {
-            const response = await fetch('http://localhost:3001/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            });
-
-            if (response.ok) {
-                console.log('Login success.');
-                const responseBody = await response.json();
-                navigate('/dashboard');
-            } else {
-                console.log('Failed to login');
-            }
-        } catch (error) {
-            console.error('Server error', error);
-        }
+        dispatch(login(userData));
     };
 
     return (

@@ -3,7 +3,7 @@ import { Container, Paper, Typography, Box, Button, TextField } from '@mui/mater
 
 const StatusCard = () => {
     return (
-        <Container maxWidth="sm"> {/* This will set the max width of the container to 'sm' which is 600px */}
+        <Container maxWidth="sm">
             <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
                 <Typography variant="h6" gutterBottom>
                     Status
@@ -25,9 +25,9 @@ const StatusCard = () => {
                     rows={4}
                     variant="outlined"
                     margin="normal"
-                    value="Please wait for HR to review your application." // 实际的文本内容在这里设置
+                    value="Please wait for HR to review your application."
                     InputProps={{
-                        readOnly: true, // 这会使文本字段只读
+                        readOnly: true,
                     }}
                     style={{ marginBottom: '20px' }}
                 />
