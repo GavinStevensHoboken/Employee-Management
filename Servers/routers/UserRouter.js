@@ -48,7 +48,6 @@ router.post('/login', async (req, res) => {
         const payload = {
             user: {
                 id: user._id,
-                vendor: user.vendor,
                 email: user.email
             }
         };
