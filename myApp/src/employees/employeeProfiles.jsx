@@ -14,7 +14,7 @@ const EmployeeProfiles = () => {
                     const fetchedEmployees = await res.json();
                     setEmployees(fetchedEmployees);
                 } catch (err) {
-                    setError(err);
+                    console.log(err);
                 }
         };
         fetchData();

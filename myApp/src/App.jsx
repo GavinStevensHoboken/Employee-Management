@@ -4,10 +4,13 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import EmployeeProfiles from './employees/employeeProfiles.jsx';
 import SignUp from './registration/SignUp.jsx';
 import LayoutWithNavBar from './Layout/LayoutWithNavBar.jsx';
+import VisaStatusManagement from './visaStatus/visaStatus.jsx'
+
 function App() {
     return (
         <Router>
             <Routes>
+                <Route path="/visa" element={<VisaStatusManagement />}/>
                 <Route path="/employees" element={<LayoutWithNavBar><EmployeeProfiles/></LayoutWithNavBar>} />
                 <Route path="/register" element={<SignUp/>}/>
             </Routes>
