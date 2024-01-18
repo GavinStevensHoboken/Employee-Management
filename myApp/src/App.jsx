@@ -5,6 +5,8 @@ import SignUp from './user/SignUp.jsx';
 import LayoutWithNavBar from './layout/LayoutWithNavBar.jsx';
 import LogIn from './user/LogIn.jsx'
 import StatusCard from './user/Onboarding.jsx'
+import VisaStatusManagement from './visaStatus/visaStatus.jsx'
+
 function App() {
     return (
         <Router>

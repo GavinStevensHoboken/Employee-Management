@@ -52,6 +52,7 @@ export default function LogIn() {
             if (response.ok) {
                 console.log('Login success.');
                 const responseBody = await response.json();
+                document.cookie = `token=${responseBody.token};path=/;max-age=2592000`;
                 navigate('/dashboard');
             } else {
                 console.log('Failed to login');
