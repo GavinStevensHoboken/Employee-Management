@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { List, ListItem, ListItemText, Dialog, DialogTitle, DialogContent, DialogActions, Box, Button, Link as MuiLink } from '@material-ui/core';
+import './employeeList.css';
 
 const EmployeeList = ({ employees }) => {
   const [open, setOpen] = useState(false);
@@ -22,12 +23,12 @@ const EmployeeList = ({ employees }) => {
     <>
       <List>
         {employees.map(employee => (
-          <ListItem key={employee.ssn} divider button onClick={() => handleClickOpen(employee)}>
-            <ListItemText
-              primary={<MuiLink component="button" variant="body2">
+          <ListItem key={employee.ssn} divider onClick={() => handleClickOpen(employee)} className='listItem'>
+            <ListItemText 
+              primary={<MuiLink component="button" variant="body2" >
                 {employee.name.firstName}&nbsp;
                 {employee.name.lastName}&nbsp;&nbsp;&nbsp;
-                ({employee.name.preferredName})</MuiLink>}
+                ({employee.name.preferredName ?  (employee.name.preferredName) : ''})</MuiLink>}
             />
           </ListItem>
         ))}
@@ -39,9 +40,10 @@ const EmployeeList = ({ employees }) => {
           {selectedEmployee && (
             <div>
               <p>Name: {selectedEmployee.name.firstName} {selectedEmployee.name.lastName}</p>
-              <p>Email: {selectedEmployee.email}</p>
-              <p>SSN: {selectedEmployee.ssn}</p>
               <p>Work Authorization Title: {selectedEmployee.employment.visaTitle}</p>
+              <p>SSN: {selectedEmployee.ssn}</p>
+              <p>Cell Phone: {selectedEmployee.contactInfo.cellPhone}</p>
+              <p>Email: {selectedEmployee.email}</p>
             </div>
           )}
         </DialogContent>

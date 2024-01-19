@@ -65,7 +65,7 @@ const employeesList = [
   {
       name: {
           firstName: 'Michael',
-          lastName: 'Smith',
+          lastName: 'Amith',
           middleName: 'C',
           preferredName: 'Mike'
       },
@@ -123,6 +123,15 @@ const EmployeeProfiles = () => {
       return firstName.toLowerCase().includes(keyword) ||
              lastName.toLowerCase().includes(keyword) ||
              (preferredName && preferredName.toLowerCase().includes(keyword));
+    }).sort((a, b) => {
+      // Sort by lastName
+      if (a.name.lastName < b.name.lastName) {
+          return -1; // a infront of b
+      }
+      if (a.name.lastName > b.name.lastName) {
+          return 1; // b infront of a
+      }
+      return 0; // a and b position does not change
     });
   
   return (
