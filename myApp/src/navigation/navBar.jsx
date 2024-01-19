@@ -35,11 +35,13 @@ function NavBar() {
         if (isLoggedIn) {
             document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;';
             dispatch(logOut())
+            // navigate('/login');
         }else{
             navigate('/login');
         }
     };
     const handleEmployee = () => {
+        handleClose();
         navigate('/employees')
     };
     const handleVisa = () => {
@@ -54,7 +56,6 @@ function NavBar() {
             <Toolbar>
                 <Box sx={{ flexGrow: 1, display: 'flex' }}>
                     <Button color="inherit" component={Link} to="/">Home</Button>
-                    <div className='menu'>
                         <Button
                             id="fade-button"
                             aria-controls={open ? 'fade-menu' : undefined}
@@ -74,12 +75,13 @@ function NavBar() {
                             open={open}
                             onClose={handleClose}
                             TransitionComponent={Fade}
+                            button
+                            sx={{display: 'inline-flex'}}
                         >
-                            <MenuItem onClick={handleEmployee}>Employee Profiles</MenuItem>
-                            <MenuItem onClick={handleVisa}>Visa Status Management</MenuItem>
-                            <MenuItem onClick={handleHiring}>Hiring Management</MenuItem>
+                            <MenuItem onClick={handleEmployee}>Employee</MenuItem>
+                            <MenuItem onClick={handleVisa}>Visa</MenuItem>
+                            <MenuItem onClick={handleHiring}>Hiring</MenuItem>
                         </Menu>
-                    </div>
                 </Box>
                 <Button color="inherit" onClick={handleSign}>{isLoggedIn ? 'Sign Out' : 'Sign In'}</Button>
             </Toolbar>
