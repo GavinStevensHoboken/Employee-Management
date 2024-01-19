@@ -57,7 +57,7 @@ export default function LogIn() {
                 const responseBody = await response.json();
                 document.cookie = `token=${responseBody.token};path=/;max-age=2592000`;
                 dispatch(logIn());
-                navigate('/dashboard');
+                navigate('/status');
             } else {
                 alert('Failed to login');
             }
