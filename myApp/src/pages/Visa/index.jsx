@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import { fetchDocument } from '../../redux/visaOpt';
 import axios from 'axios';
 import { getJwtToken } from '../../utils/jwtTokenUtils';
-import { base64STR } from './file';
 
 import { Viewer } from '@react-pdf-viewer/core';
 import {Worker} from '@react-pdf-viewer/core'
@@ -16,9 +15,14 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 
 export default function Visa() {
-    const [file, setFile] = useState('');
+    const [file, setFile] = useState(''); // For uploading
+    const [view, setView] = useState(''); // For preview
+    const [title, setTitle] = useState('Visa');
+    const [docType, setDocType] = useState(undefined);
+    const [pdfError, setPdfError]=useState('');
+    const visaType = {1:'receipt',2:'ead',3:'i983',4:'i20'};
     const{
-        optDocument: {data, status}
+        optDocument: {data}
     } = useSelector((state) => state);
     const dispatch = useDispatch();
 
@@ -27,18 +31,55 @@ export default function Visa() {
     }, [dispatch]);
 
     useEffect(() => {
-        const document = data && data['receipt.link'];
-        if (document && document['data']) {
-            setFile(() => {
-                console.log(document['data']['data']);
-                return document['data']['data']});  
+        if(data){
+            if(data.status === 1) 
+            {
+                setTitle('Approved All');
+            }else if(data['receipt.status'] === 0){
+                setTitle('Plase upload opt receipt');
+                setDocType(1);
+            }else if(data['ead.status'] === 0){
+                setTitle('Plase upload opt ead');
+                setDocType(2);
+            }else if(data['i983.status'] === 0){
+                setTitle('Plase upload i983');
+                setDocType(3);
+            }else if(data['i20.status'] === 0){
+                setTitle('Plase upload i20');
+                setDocType(4);
+            }
+            
         }
+        // const document = data && data['ead.link'];
+        // if (document && document['data']) {
+        //     setView(() => {
+        //         console.log('status');
+        //         console.log(data.status);
+        //         return document['data']['data']});  
+        //     setDocType(data.status);
+        //     setTitle(visaType[data.status]);
+        // }
     }, [data])
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
-
+    const allowedFiles = ['application/pdf'];
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+        const selectedFile = e.target.files[0]
+        setFile(selectedFile);
+        if(selectedFile){
+            if(selectedFile&&allowedFiles.includes(selectedFile.type)){
+              let reader = new FileReader();
+              reader.readAsDataURL(selectedFile);
+              reader.onloadend=(e)=>{
+                setPdfError('');
+                setView(e.target.result);
+              }
+            }
+            else{
+              setPdfError('Not a valid pdf: Please select only PDF');
+              setView('');
+            }
+        }
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,6 +87,7 @@ export default function Visa() {
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('type', docType);
 
         try{
             const token = getJwtToken();
@@ -63,25 +105,27 @@ export default function Visa() {
 
     return(
         <>
+        <h1>{title}</h1>
         <form onSubmit={handleSubmit}>
             <div>
                 <input type="file" onChange={handleFileChange}></input>
                 <button type="submit">upload</button>
             </div>
+            {pdfError&&<span className='text-danger'>{pdfError}</span>}
         </form>
         <br/>
         <div className="viewer">
 
         {/* render this if we have a pdf file */}
-        {file&&(
+        {view&&(
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js">
-            <Viewer fileUrl={file}
+            <Viewer fileUrl={view}
             plugins={[defaultLayoutPluginInstance]}></Viewer>
           </Worker>
         )}
 
         {/* render this if we have pdfFile state null   */}
-        {!file&&<>No file is selected yet</>}
+        {!view&&<>No file is selected yet</>}
 
       </div>
         </>
