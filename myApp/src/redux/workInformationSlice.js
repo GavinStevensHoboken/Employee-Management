@@ -10,15 +10,16 @@ export const workInformationSlice = createSlice({
         residencyStatus: '',
         workAuthorization: '',
         visaTitle: '',
+        fileName: '',
         optReceipt: null
     },
     reducers: {
-        updateWorkInformationField: (state, action) => {
+        updateField: (state, action) => {
             const { field, value } = action.payload;
             state[field] = value;
-        },
+        }
     },
 });
 
-export const { updateWorkInformationField } = workInformationSlice.actions;
+export const { updateField } = workInformationSlice.actions;
 export default workInformationSlice.reducer;

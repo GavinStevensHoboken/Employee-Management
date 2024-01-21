@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authReducer';
-import personalInformationReducer from './personalInformationSlice'
-import {workInformationSlice} from "./workInformationSlice.js";
-
+import personalInformationReducer from './personalInformationSlice';
+import workInformationReducer from "./workInformationSlice.js";
+import referenceAndEmergencyContactsSlice from './referenceAndEmergencyContactsSlice.js'
 const store = configureStore({
     reducer: {
         auth: authReducer,
         personalInformation: personalInformationReducer,
-        workInformation: workInformationSlice
+        workInformation: workInformationReducer,
+        referenceAndEmergencyContacts: referenceAndEmergencyContactsSlice
     },
 });
 
