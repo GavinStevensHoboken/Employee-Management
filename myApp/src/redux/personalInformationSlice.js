@@ -7,6 +7,7 @@ export const personalInformationSlice = createSlice({
         firstName: '',
         middleName: '',
         lastName: '',
+        avatar: '',
         dateOfBirth: '',
         streetAddress: '',
         streetAddress2: '',
@@ -24,9 +25,12 @@ export const personalInformationSlice = createSlice({
             const { field, value } = action.payload;
             state[field] = value;
         },
+        updateAvatar: (state, action) => {
+            state.avatar = action.payload;
+        },
     },
 });
 
-export const { updateField } = personalInformationSlice.actions;
+export const { updateField, updateAvatar  } = personalInformationSlice.actions;
 
 export default personalInformationSlice.reducer;

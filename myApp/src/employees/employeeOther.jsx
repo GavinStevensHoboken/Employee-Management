@@ -1,53 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     TextField, Button, Grid, Typography, Paper
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
+import {useSelector, useDispatch} from 'react-redux';
+import { updateReference, updateEmergencyContact, addEmergencyContact } from '../redux/referenceAndEmergencyContactsSlice.js';
 const ReferenceAndEmergencyContactsForm = () => {
-    const [reference, setReference] = useState({
-        firstName: '',
-        lastName: '',
-        middleName: '',
-        phone: '',
-        email: '',
-        relationship: ''
-    });
 
-    const [emergencyContacts, setEmergencyContacts] = useState([
-        {
-            firstName: '',
-            lastName: '',
-            middleName: '',
-            phone: '',
-            email: '',
-            relationship: ''
-        }
-    ]);
+    const dispatch = useDispatch();
+    const referenceData = useSelector((state) => state.referenceAndEmergencyContacts.reference);
+    const emergencyContactsData = useSelector((state) => state.referenceAndEmergencyContacts.emergencyContacts);
 
     const handleReferenceChange = (e) => {
         const { name, value } = e.target;
-        setReference({ ...reference, [name]: value });
+        dispatch(updateReference({ [name]: value }));
     };
 
     const handleEmergencyContactChange = (index, e) => {
-        const updatedContacts = [...emergencyContacts];
-        updatedContacts[index] = { ...updatedContacts[index], [e.target.name]: e.target.value };
-        setEmergencyContacts(updatedContacts);
+        const { name, value } = e.target;
+        dispatch(updateEmergencyContact({ index, contact: { [name]: value } }));
     };
 
-    const addEmergencyContact = () => {
-        setEmergencyContacts([
-            ...emergencyContacts,
-            {
-                firstName: '',
-                lastName: '',
-                middleName: '',
-                phone: '',
-                email: '',
-                relationship: ''
-            }
-        ]);
+    const handleAddEmergencyContact = () => {
+        dispatch(addEmergencyContact());
     };
 
     return (
@@ -55,13 +30,13 @@ const ReferenceAndEmergencyContactsForm = () => {
             <Typography variant="h6">Reference Information</Typography>
             <Grid container spacing={2}>
                 {/* Reference Fields */}
-                {Object.keys(reference).map((key) => (
+                {Object.keys(referenceData).map((key) => (
                     <Grid item xs={12} sm={6} md={4} key={key}>
                         <TextField
                             fullWidth
                             label={key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')}
                             name={key}
-                            value={reference[key]}
+                            value={referenceData[key]}
                             onChange={handleReferenceChange}
                         />
                     </Grid>
@@ -69,7 +44,7 @@ const ReferenceAndEmergencyContactsForm = () => {
             </Grid>
 
             <Typography variant="h6" style={{ marginTop: '20px' }}>Emergency Contacts</Typography>
-            {emergencyContacts.map((contact, index) => (
+            {emergencyContactsData.map((contact, index) => (
                 <Grid container spacing={2} key={index} style={{ marginBottom: '10px' }}>
                     {/* Emergency Contact Fields */}
                     {Object.keys(contact).map((key) => (
@@ -86,7 +61,7 @@ const ReferenceAndEmergencyContactsForm = () => {
                 </Grid>
             ))}
 
-            <Button startIcon={<AddCircleOutlineIcon />} onClick={addEmergencyContact}>
+            <Button startIcon={<AddCircleOutlineIcon />} onClick={handleAddEmergencyContact}>
                 Add Emergency Contact
             </Button>
         </Paper>

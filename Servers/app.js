@@ -8,6 +8,7 @@ const userRouter = require('./routers/UserRouter');
 const cookieParser = require('cookie-parser');
 const errorHandlerMiddleware = require('./middleware/errorHandler');
 
+const bodyParser = require('body-parser');
 
 connectDB();
 // app.use(cors);
@@ -15,6 +16,7 @@ app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true
 }));
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));

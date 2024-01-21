@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TextField, Button, Stepper, Step, StepLabel, Typography, Paper, Grid} from '@mui/material';
+import {Button, Stepper, Step, StepLabel, Typography, Paper, Grid} from '@mui/material';
 
 const steps = ['Personal Details', 'Legal and Work Information', 'References and Emergency Contacts'];
 import UserForm from "./employeeDetail.jsx";
@@ -11,6 +11,8 @@ const EmployeeForm = () => {
     const [activeStep, setActiveStep] = useState(0);
     const formData = useSelector((state) => state.personalInformation);
     const workData = useSelector((state) => state.workInformation);
+    const reference = useSelector(state => state.referenceAndEmergencyContacts.reference);
+    const emergencyContacts = useSelector(state => state.referenceAndEmergencyContacts.emergencyContacts);
     function getStepContent(step) {
         switch (step) {
             case 0:
@@ -27,7 +29,33 @@ const EmployeeForm = () => {
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/api/users/saveData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    personalInformation: formData,
+                    workInformation: workData,
+                    references: {
+                        reference,
+                        emergencyContacts
+                    }
+                })
+            });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result.message);
+        } catch (error) {
+            console.error('There was an error saving the data', error);
+        }
+    };
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
@@ -41,19 +69,58 @@ const EmployeeForm = () => {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={4}>
                         <Typography>Personal Details:</Typography>
-                        {Object.entries(formData).map(([fieldName, value]) => (
-                            <Typography key={fieldName}>
-                                {formatFieldName(fieldName)}: {value || 'Not provided'}
-                            </Typography>
-                        ))}
+                        {Object.entries(formData).map(([fieldName, value]) => {
+                            if (fieldName === 'avatar' && value) {
+                                return (
+                                    <div key={fieldName}>
+                                        <Typography>{formatFieldName(fieldName)}:</Typography>
+                                        <img src={value} alt="Avatar" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <Typography key={fieldName}>
+                                        {formatFieldName(fieldName)}: {value || ''}
+                                    </Typography>
+                                );
+                            }
+                        })}
                     </Grid>
-
                     <Grid item xs={12} md={4}>
                         <Typography>Work Details:</Typography>
+                        {Object.entries(workData).map(([fieldName, value]) => {
+                            if (fieldName === 'optReceipt' && value) {
+                                return (
+                                    <Typography key={fieldName}>
+                                        {formatFieldName(fieldName)}: <a href={value} download>Download OPT Receipt</a>
+                                    </Typography>
+                                );
+                            } else {
+                                return (
+                                    <Typography key={fieldName}>
+                                        {formatFieldName(fieldName)}: {value || ''}
+                                    </Typography>
+                                );
+                            }
+                        })}
                     </Grid>
 
                     <Grid item xs={12} md={4}>
                         <Typography>References and Emergency Contacts:</Typography>
+                        <Typography>References:</Typography>
+                        <Typography>{reference.firstName} {reference.middleName} {reference.lastName}</Typography>
+                        <Typography>Phone: {reference.phone}</Typography>
+                        <Typography>Email: {reference.email}</Typography>
+                        <Typography>Relationship: {reference.relationship}</Typography>
+                        <Typography>Emergency Contacts:</Typography>
+                        {emergencyContacts.map((contact, index) => (
+                            <div key={index}>
+                                <Typography>{contact.firstName} {contact.middleName} {contact.lastName}</Typography>
+                                <Typography>Phone: {contact.phone}</Typography>
+                                <Typography>Email: {contact.email}</Typography>
+                                <Typography>Relationship: {contact.relationship}</Typography>
+                            </div>
+                        ))}
                     </Grid>
                 </Grid>
             </div>
@@ -82,7 +149,12 @@ const EmployeeForm = () => {
                     }}>
                         {renderSummary()}
                     </Paper>
-                        <Button onClick={handleBack}>Back</Button>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
+                            <Button onClick={handleBack}>Back</Button>
+                            <Button  variant="contained" color="primary" onClick={handleSubmit}>
+                                Submit
+                            </Button>
+                        </div>
                     </div>
                 ) : (
                     <div>
