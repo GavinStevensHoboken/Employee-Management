@@ -46,10 +46,16 @@ exports.getDocumentByEmployee = async (employeeId) => {
     Object.keys(document.schema.paths).forEach((field) => {
         console.log(field);
         if(document.schema.paths[field].options.ref === 'File'){
+            const statusField = field.split('.')[0]+'.status';
             const fieldValue = _.get(document, field);
-            if(fieldValue) filesObject[field] = fieldValue;
+            const statusValue = _.get(document, statusField);
+            if(fieldValue){
+                filesObject[field] = fieldValue;
+                filesObject[statusField] = statusValue;
+            } 
         }
     })
+    filesObject['status'] = _.get(document, 'status');
     return filesObject;
 }
 
