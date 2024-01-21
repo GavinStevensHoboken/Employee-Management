@@ -1,5 +1,6 @@
 const Document = require('../models/Document');
 const File = require('../models/File');
+const _ = require('lodash');
 
 const visas = {1:'receipt',2:'ead',3:'i983',4:'i20'}; // mapping type number with visa
 
@@ -35,11 +36,30 @@ exports.addDocument = async (employeeId, documentType, fileId) => {
 }
 
 exports.getDocumentByEmployee = async (employeeId) => {
-    const document = await Document.findOne({employee:employeeId});
-    return document;
+    const document = await Document.findOne({employee:employeeId})
+        .populate('receipt.link')
+        .populate('ead.link')
+        .populate('i983.link')
+        .populate('i20.link');
+    if(!document) throw 'Document not found';
+    const filesObject = {};
+    Object.keys(document.schema.paths).forEach((field) => {
+        console.log(field);
+        if(document.schema.paths[field].options.ref === 'File'){
+            const fieldValue = _.get(document, field);
+            if(fieldValue) filesObject[field] = fieldValue;
+        }
+    })
+    return filesObject;
 }
 
 exports.getAllDocuments = async () => {
-    const document = await Document.find();
+    const document = await Document.find()
+        .populate('receipt.link')
+        .populate('ead.link')
+        .populate('i983.link')
+        .populate('i20.link');
+    if(!document) throw 'Document not found';
+    
     return document;
 }
