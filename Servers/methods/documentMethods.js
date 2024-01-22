@@ -18,6 +18,7 @@ const getDoc = async (req,res) => {
     try{
         if(!req.auth) throw "Please login";
         const userId = req.user.id
+        console.log(userId);
         const document = await getDocumentByEmployee(userId);
         if(!document) throw "File not found"
         res.json(document);
