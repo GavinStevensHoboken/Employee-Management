@@ -118,7 +118,7 @@ export default function Visa() {
 
         {/* render this if we have a pdf file */}
         {view&&(
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js">
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js">
             <Viewer fileUrl={view}
             plugins={[defaultLayoutPluginInstance]}></Viewer>
           </Worker>
