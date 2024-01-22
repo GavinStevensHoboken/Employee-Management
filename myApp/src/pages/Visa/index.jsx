@@ -14,14 +14,16 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 
-
 export default function Visa() {
     const [file, setFile] = useState(''); // For uploading
     const [view, setView] = useState(''); // For preview
     const [title, setTitle] = useState('Visa');
+    const [enableForm, setEnableForm] = useState(true);
     const [docType, setDocType] = useState(undefined);
     const [pdfError, setPdfError]=useState('');
-    const visaType = {1:'receipt',2:'ead',3:'i983',4:'i20'};
+    // const visaType = {1:'receipt',2:'ead',3:'i983',4:'i20'};
+    // const approalStatus = {0:'new',1:'approved',2:'submitted',3:'rejected'};
+
     const{
         optDocument: {data}
     } = useSelector((state) => state);
@@ -36,17 +38,65 @@ export default function Visa() {
             if(data.status === 1) 
             {
                 setTitle('Approved All');
-            }else if(data['receipt.status'] === 0){
+            }else if(!data['receipt.status'] || data['receipt.status'] === 0){
                 setTitle('Plase upload opt receipt');
                 setDocType(1);
-            }else if(data['ead.status'] === 0){
+            }else if(data['receipt.status'] === 2){
+                setTitle('Waiting for Approval');
+                setEnableForm(false);
+                setDocType(1);
+                let document = data && data['receipt.link'];
+                if (document && document['data']) {
+                    setView(document['data']['data']); 
+                }
+            }
+             else if(data['receipt.status'] === 3){
+                setTitle('Plase modify your opt receipt');
+                setDocType(1);
+            }
+            else if(!data['ead.status'] || data['ead.status'] === 0){
                 setTitle('Plase upload opt ead');
                 setDocType(2);
-            }else if(data['i983.status'] === 0){
+            }else if(data['ead.status'] === 2){
+                setTitle('Waiting for Approval');
+                setEnableForm(false);
+                setDocType(2);
+                let document = data && data['ead.link'];
+                if (document && document['data']) {
+                    setView(document['data']['data']); 
+                }
+            }else if(data['ead.status'] === 3){
+                setTitle('Plase modify your ead');
+                setDocType(2);
+            }
+            else if(!data['i983.status'] || data['i983.status'] === 0){
                 setTitle('Plase upload i983');
                 setDocType(3);
-            }else if(data['i20.status'] === 0){
+            }else if(data['i983.status'] === 2){
+                setTitle('Waiting for Approval');
+                setEnableForm(false);
+                setDocType(3);
+                let document = data && data['i983.link'];
+                if (document && document['data']) {
+                    setView(document['data']['data']); 
+                }
+            }else if(data['i983.status'] === 3){
+                setTitle('Plase modify your i983');
+                setDocType(3);
+            }
+            else if(!data['i20.status'] || data['i20.status'] === 0){
                 setTitle('Plase upload i20');
+                setDocType(4);
+            }else if(data['i20.status'] === 2){
+                setTitle('Waiting for Approval');
+                setEnableForm(false);
+                setDocType(4);
+                let document = data && data['i20.link'];
+                if (document && document['data']) {
+                    setView(document['data']['data']); 
+                }
+            }else if(data['i20.status'] === 3){
+                setTitle('Plase modify your i20');
                 setDocType(4);
             }
             
@@ -62,7 +112,6 @@ export default function Visa() {
         // }
     }, [data])
 
-    const defaultLayoutPluginInstance = defaultLayoutPlugin();
     const allowedFiles = ['application/pdf'];
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0]
@@ -84,7 +133,7 @@ export default function Visa() {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        if(!file) alert('Please choose a file!');
 
         const formData = new FormData();
         formData.append('file', file);
@@ -99,21 +148,24 @@ export default function Visa() {
                 }
             });
             console.log('File upload successfully');
+            setTitle('Waiting for Approval');
+            setEnableForm(false);
         }catch(error){
-            console.error('Error:', error.message)
+            console.error('Error:', error.message);
+            alert('upload failed');
         }
     }
 
     return(
         <>
         <h1>{title}</h1>
-        <form onSubmit={handleSubmit}>
+        {enableForm && <form onSubmit={handleSubmit}>
             <div>
                 <input type="file" onChange={handleFileChange}></input>
                 <button type="submit">upload</button>
             </div>
             {pdfError&&<span className='text-danger'>{pdfError}</span>}
-        </form>
+        </form>}
         <br/>
         <div className="viewer">
 
