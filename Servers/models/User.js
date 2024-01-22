@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true
+    },
+    applyStatus: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 });
 

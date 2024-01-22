@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const emergencyContactSchema = new mongoose.Schema({
+    userId: { type: String, default: '' },
     firstName: { type: String, default: '' },
     lastName: { type: String, default: '' },
     middleName: { type: String, default: '' },

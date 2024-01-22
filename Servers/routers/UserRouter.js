@@ -84,7 +84,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 router.post('/saveData', async (req, res) => {
     try {
-        const { personalInformation, workInformation, references } = req.body;
+        const { personalInformation, workInformation, references} = req.body;
 
         const personalInfoDocument = new PersonalInformation(personalInformation);
         await personalInfoDocument.save()
@@ -95,11 +95,11 @@ router.post('/saveData', async (req, res) => {
         await workInfoDocument.save().then(doc => console.log('workInfoDocument saved'))
             .catch(err => console.error('Error saving workInfoDocument:', err));
 
-        const referenceDocument = new ReferenceInfo(references.reference);
+        const referenceDocument = new ReferenceInfo(references.referenceWithUserId);
         await referenceDocument.save().then(doc => console.log('referenceDocuments saved'))
             .catch(err => console.error('Error saving referenceDocuments:', err));
 
-        const savePromises = references.emergencyContacts.map(contactData => {
+        const savePromises = references.emergencyContactsWithUserId.map(contactData => {
             const emergencyContact = new EmergencyContact(contactData);
             return emergencyContact.save();
         });

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const personalInformationSchema = new mongoose.Schema({
+    userId: { type: String, default: '' },
     title: { type: String, default: '' },
     firstName: { type: String, default: '' },
     middleName: { type: String, default: '' },
