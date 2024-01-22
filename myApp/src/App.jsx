@@ -12,13 +12,13 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/visa" element={<VisaStatusManagement />}/>
+                <Route path="/visa" element={<LayoutWithNavBar><VisaStatusManagement /></LayoutWithNavBar>}/>
                 <Route path="/employees" element={<LayoutWithNavBar><EmployeeProfiles/></LayoutWithNavBar>} />
                 <Route path="/register" element={<SignUp/>}/>
                 <Route path="/login" element={<LogIn/>}/>
                 <Route path="/status" element={<LayoutWithNavBar><StatusCard/></LayoutWithNavBar>} />
                 <Route path="/application" element={<LayoutWithNavBar><EmployeeForm/></LayoutWithNavBar>} />
-                <Route path="/visafiles" element={<Visa/>}/>
+                <Route path="/visafiles" element={<LayoutWithNavBar><Visa/></LayoutWithNavBar>}/>
             </Routes>
         </Router>
     )

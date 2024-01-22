@@ -42,9 +42,11 @@ function NavBar() {
     };
     const handleEmployee = () => {
         handleClose();
-        navigate('/employees')
+        navigate('/employees');
     };
     const handleVisa = () => {
+        handleClose();
+        navigate('/visa');
         
     };
     const handleHiring = () => {
@@ -75,7 +77,6 @@ function NavBar() {
                             open={open}
                             onClose={handleClose}
                             TransitionComponent={Fade}
-                            button
                             sx={{display: 'inline-flex'}}
                         >
                             <MenuItem onClick={handleEmployee}>Employee</MenuItem>

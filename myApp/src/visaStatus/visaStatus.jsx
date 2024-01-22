@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Container, Button, TextField, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 const VisaStatusManagement = () => {
     const [employees, setEmployees] = useState([]);
@@ -51,8 +51,8 @@ const VisaStatusManagement = () => {
     };
 
     return (
-        <div>
-            <TextField label="Search Employees" variant="outlined" value={searchTerm} onChange={handleSearchChange} />
+        <Container>
+            <TextField label="Search Employees" fullWidth variant="outlined" margin="normal" value={searchTerm} onChange={handleSearchChange} />
             <List>
                 {filteredEmployees.map((employee) => (
                     <ListItem key={employee._id} divider>
@@ -62,9 +62,9 @@ const VisaStatusManagement = () => {
                         />
                         {/* Add buttons for actions based on the next step */}
                         {/* Example: */}
-                        {/* <Button onClick={() => handleApprove(employee._id, documentId)}>Approve</Button> */}
-                        {/* <Button onClick={() => handleReject(employee)}>Reject</Button> */}
-                        {/* <Button onClick={() => handleSendNotification(employee._id)}>Send Notification</Button> */}
+                        <Button onClick={() => handleApprove(employee._id, documentId)}>Approve</Button>
+                        <Button onClick={() => handleReject(employee)}>Reject</Button>
+                        <Button onClick={() => handleSendNotification(employee._id)}>Send Notification</Button>
                     </ListItem>
                 ))}
             </List>
@@ -89,7 +89,7 @@ const VisaStatusManagement = () => {
                     <Button onClick={handleRejectSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </Container>
     );
 };
 
