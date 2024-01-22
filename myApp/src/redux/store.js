@@ -4,7 +4,6 @@ import personalInformationReducer from './personalInformationSlice'
 import workInformationSlice from "./workInformationSlice.js";
 import optReducer from "./visaOpt";
 
-import workInformationReducer from "./workInformationSlice.js";
 import referenceAndEmergencyContactsSlice from './referenceAndEmergencyContactsSlice.js'
 const store = configureStore({
     reducer: {
@@ -12,7 +11,6 @@ const store = configureStore({
         personalInformation: personalInformationReducer,
         workInformation: workInformationSlice,
         optDocument: optReducer,
-        workInformation: workInformationReducer,
         referenceAndEmergencyContacts: referenceAndEmergencyContactsSlice
     },
 });

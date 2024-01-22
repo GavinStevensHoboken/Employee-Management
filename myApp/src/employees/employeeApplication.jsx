@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Stepper, Step, StepLabel, Typography, Paper, Grid} from '@mui/material';
 
 const steps = ['Personal Details', 'Legal and Work Information', 'References and Emergency Contacts'];
@@ -6,13 +6,28 @@ import UserForm from "./employeeDetail.jsx";
 import WorkForm from './employeeWork.jsx';
 import ReferenceAndEmergencyContactsForm from './employeeOther.jsx'
 import { useSelector} from 'react-redux';
-
+import { getJwtToken } from '../utils/jwtTokenUtils';
 const EmployeeForm = () => {
     const [activeStep, setActiveStep] = useState(0);
     const formData = useSelector((state) => state.personalInformation);
     const workData = useSelector((state) => state.workInformation);
     const reference = useSelector(state => state.referenceAndEmergencyContacts.reference);
     const emergencyContacts = useSelector(state => state.referenceAndEmergencyContacts.emergencyContacts);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        async function verifyToken() {
+            try {
+                const token = getJwtToken();
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                setUser(payload.user);
+            } catch (error) {
+                console.error('Token obtained failed:', error);
+            }
+        }
+
+        verifyToken();
+    }, []);
     function getStepContent(step) {
         switch (step) {
             case 0:
@@ -30,6 +45,10 @@ const EmployeeForm = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
     const handleSubmit = async () => {
+        const formDataWithUserId = { ...formData, userId: user.id };
+        const workDataWithUserId = { ...workData, userId: user.id };
+        const referenceWithUserId = { ...reference, userId: user.id };
+        const emergencyContactsWithUserId = emergencyContacts.map(contact => ({ ...contact, userId: user.id }));
         try {
             const response = await fetch('http://localhost:3001/api/users/saveData', {
                 method: 'POST',
@@ -37,11 +56,11 @@ const EmployeeForm = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    personalInformation: formData,
-                    workInformation: workData,
+                    personalInformation: formDataWithUserId,
+                    workInformation: workDataWithUserId,
                     references: {
-                        reference,
-                        emergencyContacts
+                        referenceWithUserId,
+                        emergencyContactsWithUserId
                     }
                 })
             });
