@@ -6,6 +6,7 @@ import { getJwtToken } from '../../utils/jwtTokenUtils';
 
 import { Viewer } from '@react-pdf-viewer/core';
 import {Worker} from '@react-pdf-viewer/core'
+import PdfViewer from './PdfViewer';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
@@ -117,14 +118,10 @@ export default function Visa() {
         <div className="viewer">
 
         {/* render this if we have a pdf file */}
+        
         {view&&(
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js">
-            <Viewer fileUrl={view}
-            plugins={[defaultLayoutPluginInstance]}></Viewer>
-          </Worker>
+          <PdfViewer base64String={view}/>
         )}
-
-        {/* render this if we have pdfFile state null   */}
         {!view&&<>No file is selected yet</>}
 
       </div>
