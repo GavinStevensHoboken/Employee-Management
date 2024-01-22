@@ -19,7 +19,6 @@ const getDoc = async (req,res) => {
     try{
         if(!req.auth) throw "Please login";
         const userId = req.user.id
-        console.log(userId);
         const document = await getDocumentByEmployee(userId);
         if(!document) throw "File not found"
         res.json(document);
@@ -29,6 +28,21 @@ const getDoc = async (req,res) => {
     }
     
 }
+
+const getDocByUser = async (req,res) => {
+    try{
+        // if(!req.auth) throw "Please login";
+        const userId = req.params.id
+        const document = await getDocumentByEmployee(userId);
+        if(!document) throw "File not found"
+        res.json(document);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: err});
+    }
+    
+}
+
 const getAllDocs = async (req,res) => {
     try{
         if(!req.auth) throw "Please login";
@@ -45,5 +59,6 @@ const getAllDocs = async (req,res) => {
 module.exports = {
     createDoc,
     getDoc,
-    getAllDocs
+    getAllDocs,
+    getDocByUser
 };

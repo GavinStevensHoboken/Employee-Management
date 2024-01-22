@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Button, TextField, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Container, Button, TextField, List, ListItem, ListItemText, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link as MuiLink, Box} from '@mui/material';
 
 const employeesList = [
     {
@@ -32,7 +32,8 @@ const employeesList = [
         },
         visaStatus: {
             nextStep: 'Upload doc'
-        }
+        },
+        document: ''
     },
     {
         name: {
@@ -64,7 +65,8 @@ const employeesList = [
         },
         visaStatus: {
             nextStep: 'Upload doc'
-        }
+        },
+        document: ''
     },
     {
         name: {
@@ -95,12 +97,14 @@ const employeesList = [
         },
         visaStatus: {
             nextStep: 'Waiting for approval'
-        }
+        },
+        document: 'this is a document'
     }
   ];
 
 const VisaStatusManagement = () => {
     const [employees, setEmployees] = useState([]);
+    const [open, setOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -118,6 +122,10 @@ const VisaStatusManagement = () => {
         // } catch (error) {
         //     console.error('Error fetching employees:', error);
         // }
+    };
+
+    const fetchDocument = async () => {
+
     };
 
     const handleSearchChange = (event) => {
@@ -160,24 +168,57 @@ const VisaStatusManagement = () => {
         // Call API to send notification
     };
 
+    const handleClickOpen = (employee) => {
+        setSelectedEmployee(employee);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+
+
     return (
         <Container>
             <TextField label="Search Employees" fullWidth variant="outlined" margin="normal" value={searchTerm} onChange={handleSearchChange} />
             <List>
-                {filteredEmployees.map((employee) => (
-                    <ListItem key={employee._id} divider>
+                {filteredEmployees.map((employee, index) => (
+                    <ListItem key={employee.ssn} divider>
                         <ListItemText
-                            primary={`${employee.name.firstName} ${employee.name.lastName}`}
+                            primary={<MuiLink 
+                                    component="button" 
+                                    variant="body2" 
+                                    onClick={() => handleClickOpen(employee)}
+                                    >{employee.name.firstName}&nbsp;{employee.name.lastName}
+                                </MuiLink>}
                             secondary={`Next Step: ${employee.visaStatus.nextStep}`}
                         />
-                        {/* Add buttons for actions based on the next step */}
-                        {/* Example: */}
                         <Button onClick={() => handleApprove(employee._id, documentId)}>Approve</Button>
                         <Button onClick={() => handleReject(employee)}>Reject</Button>
                         <Button onClick={() => handleSendNotification(employee._id)}>Send Notification</Button>
                     </ListItem>
                 ))}
             </List>
+
+            <Dialog open={open} onClose={handleClose} aria-labelledby="employee-details-title">
+                <DialogTitle id="employee-details-title">Documents</DialogTitle>
+                <DialogContent>
+                {selectedEmployee && (
+                    <div>
+                        {selectedEmployee.document ? (<p>{selectedEmployee.document}</p>) : (<p>No Documents</p>)}
+                    </div>
+                )}
+                </DialogContent>
+                <Box sx={{display: 'flex', justifyContent: 'space-between'}} >
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                    Close
+                    </Button>
+                </DialogActions>
+                </Box>
+            </Dialog>
+
             <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
                 <DialogTitle>Reject Document</DialogTitle>
                 <DialogContent>
@@ -199,6 +240,7 @@ const VisaStatusManagement = () => {
                     <Button onClick={handleRejectSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
+
         </Container>
     );
 };
