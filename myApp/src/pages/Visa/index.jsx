@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import { fetchDocument } from '../../redux/visaOpt';
 import axios from 'axios';
 import { getJwtToken } from '../../utils/jwtTokenUtils';
-import { base64STR } from './file';
 
 import { Viewer } from '@react-pdf-viewer/core';
 import {Worker} from '@react-pdf-viewer/core'
