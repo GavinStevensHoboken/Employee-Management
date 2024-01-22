@@ -5,7 +5,7 @@ import {
 
 const initialState = {
     data:[],
-    status: 'loading',
+    status: '',
 }
 
 export const fetchDocument = createAsyncThunk("opt/fetchDocument", async (token) => {
