@@ -8,6 +8,7 @@ const createDoc = async (req,res) => {
         const {documentType} = {documentType:req.type} // type:receipt/ead/i983/i20, get from frontend in body
         const fileId = await createFile(fileData,req.file.mimetype);
         await addDocument(userId, documentType, fileId);
+        res.status(201).json({ message: 'upload successfully!' });
     }catch(err){
         console.log(err);
         res.status(500).json({message: 'Upload file failed'});

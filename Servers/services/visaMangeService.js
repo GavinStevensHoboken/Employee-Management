@@ -16,12 +16,13 @@ exports.createFile = async (data, contentType) => {
 exports.addDocument = async (employeeId, documentType, fileId) => {
     const document = await Document.findOne({employee:employeeId});
     if(!document){
-        const newDoc = new Document({employee: employeeId, [`${visas[documentType]}.link`]: fileId, [`${visas[documentType]}.status`]: 0, status:0});
+        const newDoc = new Document({employee: employeeId, [`${visas[1]}.link`]: fileId, [`${visas[1]}.status`]: 2, status:0}); //staus 0:最后一步未通过，1: 全部通过
         await newDoc.save();
     } else{
         Document.findOneAndUpdate(
             {employee: employeeId},
-            {$set: {[`${visas[documentType]}.link`]: fileId, [`${visas[documentType]}.status`]:0}}, //status，0：待审批，1:通过，2:拒绝
+            {$set: {[`${visas[documentType]}.link`]: fileId, [`${visas[documentType]}.status`]:2}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+
             {new: true}
         ).populate('employee')
          .exec()
@@ -41,10 +42,9 @@ exports.getDocumentByEmployee = async (employeeId) => {
         .populate('ead.link')
         .populate('i983.link')
         .populate('i20.link');
-    if(!document) throw 'Document not found';
+    if(!document) return {status:0};
     const filesObject = {};
     Object.keys(document.schema.paths).forEach((field) => {
-        console.log(field);
         if(document.schema.paths[field].options.ref === 'File'){
             const statusField = field.split('.')[0]+'.status';
             const fieldValue = _.get(document, field);
