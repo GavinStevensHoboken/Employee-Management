@@ -2,6 +2,10 @@ const Employee = require('../models/employee');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const Token = require('../models/Token');
+const PersonalInformation = require('../models/personalInformationSchema');
+const WorkInformation = require('../models/workInformationSchema');
+const EmergencyContact = require('../models/emergencyContactSchema');
+const ReferenceInfo = require('../models/referenceSchema');
 const jwt = require('jsonwebtoken');
 
 
@@ -73,7 +77,29 @@ const RegistrationLink = async (req, res) => {
     }
 }
 
+const ApplicationForms = async (req, res) => {
+    
+    try {
+        const userId = req.params.userId;
+        console.log(userId)
+        const personalData = await PersonalInformation.findOne({ userId: userId });
+        const workData = await WorkInformation.findOne({ userId: userId });
+        const referenceData = await ReferenceInfo.findOne({ userId: userId });
+        const emergencyContactData = await EmergencyContact.findOne({ userId: userId});
+
+        res.json({
+            personal: personalData,
+            work: workData,
+            reference: referenceData,
+            emergencyContact: emergencyContactData,
+        });
+    } catch (error) {
+        res.status(500).send('Error retrieving application data');
+    }
+}
+
 module.exports = {
     GetEmployeeProfiles,
-    RegistrationLink
+    RegistrationLink,
+    ApplicationForms
 };

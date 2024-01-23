@@ -124,8 +124,8 @@ const VisaStatusManagement = () => {
         // }
     };
 
-    const fetchDocument = async () => {
-
+    const fetchDocument = async (employee) => {
+        
     };
 
     const handleSearchChange = (event) => {
