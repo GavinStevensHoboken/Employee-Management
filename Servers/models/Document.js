@@ -29,7 +29,8 @@ const documentSchema = new Schema({
             ref: 'File'},
         status: Number
     },
-    status: Number
+    status: Number,
+    feedback: String
 });
 
 const Document = mongoose.model('Document', documentSchema);

@@ -1,4 +1,4 @@
-const {createFile, addDocument, getDocumentByEmployee, getAllDocuments} = require('../services/visaMangeService')
+const {createFile, addDocument, getDocumentByEmployee, getAllDocuments, updateDocumentByEmployee} = require('../services/visaMangeService')
 
 const createDoc = async (req,res) => {
     try{
@@ -41,8 +41,22 @@ const getAllDocs = async (req,res) => {
     
 }
 
+//试验点
+const updateDoc = async(req, res) => {
+    try{
+        if(!req.auth) throw "Please login";
+        const {employeeId, docType, status, feedback} = req.body;
+        const msg = await updateDocumentByEmployee(employeeId, docType, status, feedback);
+        res.status(201).json({message: msg});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message: err});
+    }
+}
+
 module.exports = {
     createDoc,
     getDoc,
-    getAllDocs
+    getAllDocs,
+    updateDoc
 };
