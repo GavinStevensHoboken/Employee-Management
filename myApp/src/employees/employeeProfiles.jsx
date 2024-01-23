@@ -98,41 +98,41 @@ const EmployeeProfiles = () => {
     const [searchTerm, setSearchTerm] = useState('');
   
     useEffect(() => {
-        // Fetch employees data
-        // const fetchData = async () => {
-        //         try {
-        //             const res = await fetch('http://localhost:3000/api/employees');
-        //             const fetchedEmployees = await res.json();
-        //             setEmployees(fetchedEmployees);
-        //         } catch (err) {
-        //             console.log(err);
-        //         }
-        // };
-        // fetchData();
+        fetch('http://localhost:3001/api/applications')
+        .then(response => response.json())
+        .then(data => setEmployees(data))
+        .catch(error => console.error('Error fetching personal info:', error));
         //setEmployees(employeesList);
     }, []);
-  
+    
     const handleSearch = (e) => {
       setSearchTerm(e.target.value);
     };
     
     // Can search by first, last, prefered name on every key press
-    const filteredEmployees = employeesList.filter(employee => {
-      const { firstName, lastName, preferredName } = employee.name;
-      const keyword = searchTerm.toLowerCase();
-      return firstName.toLowerCase().includes(keyword) ||
-             lastName.toLowerCase().includes(keyword) ||
-             (preferredName && preferredName.toLowerCase().includes(keyword));
-    }).sort((a, b) => {
-      // Sort by lastName
-      if (a.name.lastName < b.name.lastName) {
-          return -1; // a infront of b
-      }
-      if (a.name.lastName > b.name.lastName) {
-          return 1; // b infront of a
-      }
-      return 0; // a and b position does not change
-    });
+    if (! employees){
+            return null;
+    }
+
+    const filteredEmployees = employees.filter(employee => {
+        const firstName = employee.firstName;
+        const lastName = employee.lastName;
+        console.log(firstName)
+        const keyword = searchTerm.toLowerCase();
+        return firstName.toLowerCase().includes(keyword) ||
+                lastName.toLowerCase().includes(keyword) //||
+                //  (preferredName && preferredName.toLowerCase().includes(keyword));
+        }).sort((a, b) => {
+            // Sort by lastName
+            if (a.name.lastName < b.name.lastName) {
+                return -1; // a infront of b
+            }
+            if (a.name.lastName > b.name.lastName) {
+                return 1; // b infront of a
+            }
+            return 0; // a and b position does not change
+        });
+    
   
   return (
     <Container>

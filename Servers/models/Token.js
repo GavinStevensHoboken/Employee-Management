@@ -1,12 +1,21 @@
 const mongoose = require('mongoose');
-const {Schema} = mongoose;
 
-const token = new Schema({
-    email: { type: String,},
-    token: { type: String,},
-    createDate: { type: Date,},
-    expiresDate: { type: Date,}
+const applicationSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+    },
+    name: String,
+    token: String,
+    createDate: Date,
+    tokenExpires: Date,
+    status: {
+        type: String,
+        enum: ['not submitted', 'submitted'],
+        default: 'not submitted',
+    },
 });
 
-const Token = mongoose.model('Token', token);
-module.exports = Token;
+const Application = mongoose.model('Application', applicationSchema);
+
+module.exports = Application;

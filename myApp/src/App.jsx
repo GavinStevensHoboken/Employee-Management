@@ -9,11 +9,16 @@ import VisaStatusManagement from './visaStatus/visaStatus.jsx'
 import EmployeeForm from "./employees/employeeApplication.jsx";
 import Visa from './pages/Visa/index.jsx';
 import ApplicationSummary from './visaStatus/HRManagement.jsx';
+import UserInfoDialog from './visaStatus/DetailForm.jsx';
+import Registrations from './visaStatus/RegistrationManagement.jsx';
+
 function App() {
     return (
         <Router>
             <Routes>
+                <Route path="/registrations" element={<LayoutWithNavBar><Registrations /></LayoutWithNavBar>}/>
                 <Route path="/management" element={<LayoutWithNavBar><ApplicationSummary /></LayoutWithNavBar>}/>
+                <Route path="/management/:userId" element={<LayoutWithNavBar><UserInfoDialog /></LayoutWithNavBar>} />
                 <Route path="/visa" element={<LayoutWithNavBar><VisaStatusManagement /></LayoutWithNavBar>}/>
                 <Route path="/employees" element={<LayoutWithNavBar><EmployeeProfiles/></LayoutWithNavBar>} />
                 <Route path="/register" element={<SignUp/>}/>
