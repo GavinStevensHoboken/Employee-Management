@@ -3,6 +3,8 @@ const File = require('../models/File');
 const _ = require('lodash');
 
 const visas = {1:'receipt',2:'ead',3:'i983',4:'i20'}; // mapping type number with visa
+// const approalStatus = {0:'new',1:'approved',2:'submitted',3:'rejected'};
+
 
 exports.createFile = async (data, contentType) => {
     const file = new File({
@@ -68,4 +70,53 @@ exports.getAllDocuments = async () => {
     if(!document) throw 'Document not found';
     
     return document;
+}
+//试验点
+exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback) => {
+    const document = await Document.findOne({employee:employeeId});
+    if(docType === 4 && status === 1){
+        Document.findOneAndUpdate(
+            {employee: employeeId},
+            {$set: {[`${visas[docType]}.status`]:1},status:1}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+            {new: true}
+        ).populate('employee')
+         .exec()
+         .then((updatedDoc) => {
+            console.log(updatedDoc);
+            return 'approved';
+         })
+         .catch((err) => {
+            throw err;
+         });
+    }
+    if(docType !== 4 && status === 1){
+        Document.findOneAndUpdate(
+            {employee: employeeId},
+            {$set: {[`${visas[docType]}.status`]:1}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+            {new: true}
+        ).populate('employee')
+         .exec()
+         .then((updatedDoc) => {
+            console.log(updatedDoc);
+            return 'approved';
+         })
+         .catch((err) => {
+            throw err;
+         });
+    }
+    if(status === 2) {
+        Document.findOneAndUpdate(
+            {employee: employeeId},
+            {$set: {[`${visas[docType]}.status`]:2}, feedback: feedback}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+            {new: true}
+        ).populate('employee')
+         .exec()
+         .then((updatedDoc) => {
+            console.log(updatedDoc);
+            return 'rejected';
+         })
+         .catch((err) => {
+            throw err;
+         });
+    }
 }

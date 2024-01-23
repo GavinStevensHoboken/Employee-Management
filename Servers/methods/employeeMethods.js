@@ -81,7 +81,6 @@ const ApplicationForms = async (req, res) => {
     
     try {
         const userId = req.params.userId;
-        console.log(userId)
         const personalData = await PersonalInformation.findOne({ userId: userId });
         const workData = await WorkInformation.findOne({ userId: userId });
         const referenceData = await ReferenceInfo.findOne({ userId: userId });
