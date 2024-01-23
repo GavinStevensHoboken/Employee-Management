@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     applyStatus: {
-        type: Boolean,
-        default: false,
+        type: String,
+        default: 'no',
         required: true
     }
 });
