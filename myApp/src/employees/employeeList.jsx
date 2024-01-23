@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { List, ListItem, ListItemText, Dialog, DialogTitle, DialogContent, DialogActions, Box, Button, Link as MuiLink } from '@mui/material';
 import './employeeList.css';
 
 const EmployeeList = ({ employees }) => {
   const [open, setOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const navigate = useNavigate();
 
   const handleClickOpen = (employee) => {
     setSelectedEmployee(employee);
@@ -15,15 +17,15 @@ const EmployeeList = ({ employees }) => {
     setOpen(false);
   };
 
-  const handleDetail = () => {
-
+  const handleDetail = (userId) => {
+    navigate(`/management/${userId}`);
   };
 
   return (
     <>
       <List>
         {employees.map(employee => (
-          <ListItem key={employee.ssn} divider onClick={() => handleClickOpen(employee)} className='listItem'>
+          <ListItem key={employee._id} divider onClick={() => handleClickOpen(employee)} className='listItem'>
             <ListItemText 
               primary={<MuiLink component="button" variant="body2" >
                 {employee.firstName}&nbsp;
@@ -50,7 +52,7 @@ const EmployeeList = ({ employees }) => {
         </DialogContent>
         <Box sx={{display: 'flex', justifyContent: 'space-between'}} >
           <DialogActions>
-            <Button onClick={handleDetail} color="primary">
+            <Button onClick={() => handleDetail(selectedEmployee.userId)} color="primary">
               Detail
             </Button>
           </DialogActions>
