@@ -69,7 +69,10 @@ const EmployeeForm = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const result = await response.json();
+            const result = await response.json()
+            if (result.message === 'Data saved successfully') {
+                await updateApplyStatus('Pending'); // 假设后端预期的是布尔值true
+            }
             console.log(result.message);
         } catch (error) {
             console.error('There was an error saving the data', error);
@@ -81,6 +84,29 @@ const EmployeeForm = () => {
     const formatFieldName = (fieldName) => {
         return fieldName.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
     };
+    const updateApplyStatus = async (newApplyStatus) => {
+        const token = getJwtToken();
+        try {
+            const response = await fetch('http://localhost:3001/api/users/updateStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ applyStatus: newApplyStatus })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result.message);
+        } catch (error) {
+            console.error('There was an error updating the apply status', error);
+        }
+    };
+
     const renderSummary = () => {
         return (
             <div>
@@ -92,13 +118,13 @@ const EmployeeForm = () => {
                             if (fieldName === 'avatar' && value) {
                                 return (
                                     <div key={fieldName}>
-                                        <Typography>{formatFieldName(fieldName)}:</Typography>
+                                        <Typography  component="div">{formatFieldName(fieldName)}:</Typography>
                                         <img src={value} alt="Avatar" style={{ maxWidth: '100px', maxHeight: '100px' }} />
                                     </div>
                                 );
                             } else {
                                 return (
-                                    <Typography key={fieldName}>
+                                    <Typography  component="div" key={fieldName}>
                                         {formatFieldName(fieldName)}: {value || ''}
                                     </Typography>
                                 );
@@ -110,13 +136,13 @@ const EmployeeForm = () => {
                         {Object.entries(workData).map(([fieldName, value]) => {
                             if (fieldName === 'optReceipt' && value) {
                                 return (
-                                    <Typography key={fieldName}>
+                                    <Typography  component="div" key={fieldName}>
                                         {formatFieldName(fieldName)}: <a href={value} download>Download OPT Receipt</a>
                                     </Typography>
                                 );
                             } else {
                                 return (
-                                    <Typography key={fieldName}>
+                                    <Typography  component="div" key={fieldName}>
                                         {formatFieldName(fieldName)}: {value || ''}
                                     </Typography>
                                 );
@@ -177,7 +203,7 @@ const EmployeeForm = () => {
                     </div>
                 ) : (
                     <div>
-                        <Typography>{getStepContent(activeStep)}</Typography>
+                        <Typography  component="div">{getStepContent(activeStep)}</Typography>
                         <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
                             <Button disabled={activeStep === 0} onClick={handleBack}>
                                 Back

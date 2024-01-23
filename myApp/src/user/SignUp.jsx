@@ -15,6 +15,7 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {IconButton, InputAdornment } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {useNavigate} from "react-router-dom";
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -36,7 +37,7 @@ export default function SignUp() {
     const [isEmailValid, setEmailValid] = useState(true);
     const [emailError, setEmailError] = useState(false);
     const [emailHelperText, setEmailHelperText] = useState("");
-
+    const navigate = useNavigate();
     const handleEmailChange = (event) => {
         const newEmail = event.target.value;
         setEmail(newEmail);
@@ -69,10 +70,11 @@ export default function SignUp() {
             });
 
             if (response.ok) {
-                console.log('用户注册成功');
+                console.log('user register success');
                 const responseBody = await response.json();
                 setEmailError(false);
                 setEmailHelperText("");
+                navigate('/login');
             }else if(response.status === 409){
                 setEmailError(true);
                 setEmailHelperText("Email address is already existed.");
