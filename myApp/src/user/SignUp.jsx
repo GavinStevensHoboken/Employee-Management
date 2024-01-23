@@ -78,12 +78,12 @@ export default function SignUp() {
             }else if(response.status === 409){
                 setEmailError(true);
                 setEmailHelperText("Email address is already existed.");
-                console.log('邮箱地址已存在');
+                console.log('Email address already exist.');
             }else {
-                console.log('注册失败');
+                console.log('Registration failed.');
             }
         } catch (error) {
-            console.error('请求失败', error);
+            console.error('Server error', error);
         }
     };
 
