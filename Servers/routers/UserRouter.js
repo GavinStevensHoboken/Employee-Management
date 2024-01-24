@@ -131,6 +131,7 @@ router.post('/getId', authVerifier, async (req, res) => {
 
     return res.status(200).json({ userId: user.id });
 });
+
 router.post('/getStatus', authVerifier, async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ message: 'unauthorized' });
@@ -149,6 +150,36 @@ router.post('/updateStatus', authVerifier, async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
         res.status(200).json({ message: 'Apply status updated successfully.'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
+router.post('/updateStatus/:id', authVerifier, async (req, res) => {
+    const { applyStatus } = req.body;
+    const userId = req.params.id;
+    try {
+        const user = await User.findByIdAndUpdate(userId, { applyStatus: applyStatus }, { new: true });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json({ message: 'Apply status updated successfully.'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
+router.post('/updateFeedback/:id', authVerifier, async (req, res) => {
+    const { feedback } = req.body;
+    const userId = req.params.id;
+    try {
+        const user = await User.findByIdAndUpdate(userId, { feedback: feedback }, { new: true });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json({ message: 'Apply feedback updated successfully.'});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error.' });
