@@ -54,7 +54,15 @@ const StoreApplications = async (req, res) => {
         console.error(error.message);
     }
 }
-
+const UpdateApplications = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const email = req.user.email;
+        const application = await Application.findOne({ email });
+    } catch (error) {
+        console.error(error.message);
+    }
+}
 
 const RegistrationLink = async (req, res) => {
     const { email, name } = req.body;

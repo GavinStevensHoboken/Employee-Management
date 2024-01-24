@@ -21,4 +21,5 @@ router.get('/applications/', GetAllPerson);
 router.put('/updateFile', updateDoc);
 router.get('/registration', GetAllRegistration);
 router.post('/registration', StoreApplications);
+router.post('/UpdateApplications',auth, StoreApplications);
 module.exports = router;

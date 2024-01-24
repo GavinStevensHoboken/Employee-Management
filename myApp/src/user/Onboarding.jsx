@@ -24,6 +24,9 @@ const StatusCard = () => {
 
                 const data = await response.json();
                 setStatus(data.applyStatus);
+                if(data.applyStatus === "Approve"){
+                    navigate('/home');
+                }
 
             } catch (error) {
                 console.error('Failed to fetch user data:', error);
@@ -70,7 +73,7 @@ const StatusCard = () => {
                         />
 
                         <Button variant="contained" color="primary" fullWidth>
-                            Edit application
+                            View application
                         </Button>
                     </>
                 ) : (

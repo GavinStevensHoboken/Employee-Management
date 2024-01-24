@@ -154,5 +154,29 @@ router.post('/updateStatus', authVerifier, async (req, res) => {
         res.status(500).json({ message: 'Server error.' });
     }
 });
+router.put('/updatePersonalInformation', authVerifier, async (req, res) => {
+    const updatedData = req.body;
+    const userId = req.user.id;
+
+    try {
+        const personalInfo = await PersonalInformation.findOne({ userId: userId });
+        if (!personalInfo) {
+            return res.status(200).json({ message: 'Personal information not found for the user.' });
+        }
+        const result = await PersonalInformation.findByIdAndUpdate(
+            personalInfo._id,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: 'Personal information updated successfully',
+            updatedInfo: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating personal information' });
+    }
+});
 
 module.exports = router;
