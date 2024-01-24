@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {CircularProgress, Container, Grid} from '@mui/material';
 import NameSection from './NameSection';
 import {getJwtToken} from "../utils/jwtTokenUtils.js";
@@ -84,8 +84,9 @@ const PersonalInformationPage = () => {
 
     if (loading) {
         return (
-            <Container maxWidth="sm" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-                <CircularProgress />
+            <Container maxWidth="sm"
+                       style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
+                <CircularProgress/>
             </Container>
         );
     }
@@ -98,24 +99,33 @@ const PersonalInformationPage = () => {
         <Container maxWidth="1200px">
             <Grid container spacing={1}>
                 <Grid item xs={12} md={3}>
-                    <NameSection data={userData.personal} />
+                    <NameSection data={userData.personal}/>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <AddressSection data={userData.personal} />
+                    <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                            <ContactSection data={userData.personal}/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <AddressSection data={userData.personal}/>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <ContactSection data={userData.personal} />
+                    <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                            <EmploymentSection data={userData.work}/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {/*<DocumentSection data={userData.personal} />*/}
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <EmploymentSection data={userData.work} />
+                    <EmergencyContactSection data={userData.emergencyContact}/>
                 </Grid>
-                <Grid item xs={12} md={3}>
-                    <EmergencyContactSection data={userData.emergencyContact} />
-                </Grid>
-                {/*<Grid item xs={12} md={3}>*/}
-                {/*    <DocumentSection data={userData.personal} />*/}
-                {/*</Grid>*/}
             </Grid>
+
         </Container>
     );
 };

@@ -63,6 +63,19 @@ const UpdateApplications = async (req, res) => {
         const { status } = req.body;
         const email = req.user.email;
         const application = await Application.findOne({ email });
+        if (!application) {
+            res.status(200).json({ message: 'Application information not found for the user.' });
+        }
+        const result = await Application.findByIdAndUpdate(
+            application._id,
+            { status },
+            { new: true, runValidators: true }
+        );
+
+        if (!result) {
+            res.status(200).json({ message: 'Application not found.' });
+        }
+        res.status(200).json({ message: 'Application status updated successfully.'});
     } catch (error) {
         console.error(error.message);
     }
@@ -167,5 +180,6 @@ module.exports = {
     GetAllProfilesForHr,
     GetAllPerson,
     GetAllRegistration,
-    StoreApplications
+    StoreApplications,
+    UpdateApplications
 };

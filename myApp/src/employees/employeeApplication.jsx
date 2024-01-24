@@ -86,6 +86,8 @@ const EmployeeForm = () => {
             const result = await response.json()
             if (result.message === 'Data saved successfully') {
                 await updateApplyStatus('Pending');
+                await updateApplicationStatus('submitted');
+
             }
             console.log(result.message);
         } catch (error) {
@@ -120,7 +122,28 @@ const EmployeeForm = () => {
             console.error('There was an error updating the apply status', error);
         }
     };
+    const updateApplicationStatus = async (newApplicationStatus) => {
+        const token = getJwtToken();
+        try {
+            const response = await fetch('http://localhost:3001/api/UpdateApplications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ status: newApplicationStatus })
+            });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log("Successfully update application status.");
+        } catch (error) {
+            console.error('There was an error updating the apply status', error);
+        }
+    };
     const renderSummary = () => {
         return (
             <div>

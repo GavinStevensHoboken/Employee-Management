@@ -57,7 +57,8 @@ export default function SignUp() {
             email: data.get('email'),
             password: data.get('password'),
             username: data.get('userName'),
-            type: 'emp'
+            type: 'emp',
+            applyStatus: 'no'
         };
 
         try {
