@@ -37,7 +37,8 @@ export default function Visa() {
         if(data){
             if(data.status === 1) 
             {
-                setTitle('Approved All');
+                setTitle('All documents have been approved');
+                setEnableForm(false);
             }else if(!data['receipt.status'] || data['receipt.status'] === 0){
                 setTitle('Plase upload opt receipt');
                 setDocType(1);
