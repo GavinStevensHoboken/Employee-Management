@@ -6,7 +6,11 @@ const PersonalInformation = require('../models/personalInformationSchema');
 const WorkInformation = require('../models/workInformationSchema');
 const EmergencyContact = require('../models/emergencyContactSchema');
 const ReferenceInfo = require('../models/referenceSchema');
+const User = require('../models/User');
+const {getAllProfiles} = require('../services/profileService');
+
 const jwt = require('jsonwebtoken');
+const { lte } = require('lodash');
 
 
 
@@ -116,10 +120,32 @@ const ApplicationForms = async (req, res) => {
     }
 }
 
+const GetAllProfilesForHr = async (req, res) => {
+    //获取所有员工资料：visaStatus页面用
+    try{
+        const employees = await getAllProfiles();
+        res.status(201).json(employees);
+    }catch (error){
+        res.status(500).send('Fail to fetch employees list');
+    }
+}
+
 const GetAllPerson = async (req, res) => {
     try {
-        const personalData = await PersonalInformation.find();
-        res.json(personalData);
+        const filter = req.query.filter;
+        if(filter){
+            const users = await User.find({ applyStatus: filter });
+            const userIds = users.map(user => user._id);
+            const personalData = await PersonalInformation.find({
+                userId: { $in: userIds }
+            });
+            res.json(personalData);
+        }else{
+            const personalData = await PersonalInformation.find();
+            res.json(personalData);
+        }
+        
+
     } catch (error) {
         res.status(500).send('Error retrieving personal data');
     }
@@ -138,6 +164,7 @@ module.exports = {
     GetEmployeeProfiles,
     RegistrationLink,
     ApplicationForms,
+    GetAllProfilesForHr,
     GetAllPerson,
     GetAllRegistration,
     StoreApplications

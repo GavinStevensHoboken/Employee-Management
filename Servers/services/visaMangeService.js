@@ -18,12 +18,12 @@ exports.createFile = async (data, contentType) => {
 exports.addDocument = async (employeeId, documentType, fileId) => {
     const document = await Document.findOne({employee:employeeId});
     if(!document){
-        const newDoc = new Document({employee: employeeId, [`${visas[1]}.link`]: fileId, [`${visas[1]}.status`]: 2, status:0}); //staus 0:最后一步未通过，1: 全部通过
+        const newDoc = new Document({employee: employeeId, [`${visas[1]}.link`]: fileId, [`${visas[1]}.status`]: 2, status:0, nextStep: 5}); //staus 0:最后一步未通过，1: 全部通过
         await newDoc.save();
     } else{
         Document.findOneAndUpdate(
             {employee: employeeId},
-            {$set: {[`${visas[documentType]}.link`]: fileId, [`${visas[documentType]}.status`]:2}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+            {$set: {[`${visas[documentType]}.link`]: fileId, [`${visas[documentType]}.status`]:2, nextStep: 5}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
 
             {new: true}
         ).populate('employee')
@@ -77,7 +77,7 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
     if(docType === 4 && status === 1){
         Document.findOneAndUpdate(
             {employee: employeeId},
-            {$set: {[`${visas[docType]}.status`]:1},status:1}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+            {$set: {[`${visas[docType]}.status`]:1},status:1, nextStep: 0}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
         ).populate('employee')
          .exec()
@@ -92,7 +92,7 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
     if(docType !== 4 && status === 1){
         Document.findOneAndUpdate(
             {employee: employeeId},
-            {$set: {[`${visas[docType]}.status`]:1}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+            {$set: {[`${visas[docType]}.status`]:1, nextStep:docType+1}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
         ).populate('employee')
          .exec()

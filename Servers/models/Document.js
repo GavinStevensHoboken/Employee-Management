@@ -30,7 +30,8 @@ const documentSchema = new Schema({
         status: Number
     },
     status: Number,
-    feedback: String
+    feedback: String,
+    nextStep: Number           // 0:没下一步了,1:receipt,2:ead,3:i983,4:i20,5:wait for approve
 });
 
 const Document = mongoose.model('Document', documentSchema);
