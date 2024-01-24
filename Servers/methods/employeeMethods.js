@@ -1,7 +1,7 @@
 const Employee = require('../models/employee');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const Token = require('../models/Token');
+const Application = require('../models/Token');
 const PersonalInformation = require('../models/personalInformationSchema');
 const WorkInformation = require('../models/workInformationSchema');
 const EmergencyContact = require('../models/emergencyContactSchema');
@@ -32,23 +32,34 @@ async function storeToken(email, token) {
         const expiryTime = new Date();
         expiryTime.setHours(expiryTime.getHours() + 3);
 
-        const tokenData = {
-            email: email,
+        const updateData = {
             token: token,
             createDate: new Date(),
-            expiresDate: expiryTime
+            tokenExpires: expiryTime
         };
 
-        await new Token(tokenData).save();
+        await Application.findOneAndUpdate({ email: email }, updateData);
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+const StoreApplications = async (req, res) => {
+    try {
+        const { email, name } = req.body;
+        const applicationData = {
+            name: name,
+            email: email,
+        };
+        await new Application(applicationData).save();
+        res.json('Stored successfully')
     } catch (error) {
         console.error(error.message);
     }
 }
 
+
 const RegistrationLink = async (req, res) => {
-    // const { email, name } = req.body;
-    const email = 'huiyutao@umass.edu';
-    const name = 'huiyutao';
+    const { email, name } = req.body;
     const token = await generateToken();
 
     storeToken(email, token);
@@ -62,7 +73,7 @@ const RegistrationLink = async (req, res) => {
         }
     });
 
-    const registrationLink = `https://yourdomain.com/registration?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
+    const registrationLink = `http://localhost:3000/register`;
     let mailOptions = {
         from: 'thytaohuiyu@gmail.com',
         to: email,
@@ -109,9 +120,30 @@ const GetAllProfilesForHr = async (req, res) => {
     }
 }
 
+const GetAllPerson = async (req, res) => {
+    try {
+        const personalData = await PersonalInformation.find();
+        res.json(personalData);
+    } catch (error) {
+        res.status(500).send('Error retrieving personal data');
+    }
+}
+
+const GetAllRegistration = async (req, res) => {
+    try {
+        const applicationData = await Application.find();
+        res.json(applicationData);
+    } catch (error) {
+        res.status(500).send('Error retrieving personal data');
+    }
+}
+
 module.exports = {
     GetEmployeeProfiles,
     RegistrationLink,
     ApplicationForms,
-    GetAllProfilesForHr
+    GetAllProfilesForHr,
+    GetAllPerson,
+    GetAllRegistration,
+    StoreApplications
 };

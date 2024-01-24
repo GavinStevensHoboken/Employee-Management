@@ -26,9 +26,10 @@ const EmployeeList = ({ employees }) => {
           <ListItem key={employee.ssn} divider onClick={() => handleClickOpen(employee)} className='listItem'>
             <ListItemText 
               primary={<MuiLink component="button" variant="body2" >
-                {employee.name.firstName}&nbsp;
-                {employee.name.lastName}&nbsp;&nbsp;&nbsp;
-                ({employee.name.preferredName ?  (employee.name.preferredName) : ''})</MuiLink>}
+                {employee.firstName}&nbsp;
+                {employee.lastName}&nbsp;&nbsp;&nbsp;
+                {/* ({employee.name.preferredName ?  (employee.name.preferredName) : ''}) */}
+                </MuiLink>}
             />
           </ListItem>
         ))}
@@ -39,10 +40,10 @@ const EmployeeList = ({ employees }) => {
         <DialogContent>
           {selectedEmployee && (
             <div>
-              <p>Name: {selectedEmployee.name.firstName} {selectedEmployee.name.lastName}</p>
-              <p>Work Authorization Title: {selectedEmployee.employment.visaTitle}</p>
-              <p>SSN: {selectedEmployee.ssn}</p>
-              <p>Cell Phone: {selectedEmployee.contactInfo.cellPhone}</p>
+              <p>Name: {selectedEmployee.firstName} {selectedEmployee.lastName}</p>
+              {/* <p>Work Authorization Title: {selectedEmployee.employment.visaTitle}</p> */}
+              {/* <p>SSN: {selectedEmployee.ssn}</p> */}
+              <p>Cell Phone: {selectedEmployee.cellPhone}</p>
               <p>Email: {selectedEmployee.email}</p>
             </div>
           )}

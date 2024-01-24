@@ -13,21 +13,35 @@ const EmployeeForm = () => {
     const workData = useSelector((state) => state.workInformation);
     const reference = useSelector(state => state.referenceAndEmergencyContacts.reference);
     const emergencyContacts = useSelector(state => state.referenceAndEmergencyContacts.emergencyContacts);
-    const [user, setUser] = useState(null);
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
-        async function verifyToken() {
+        async function fetchUserId() {
+            const token = getJwtToken();
             try {
-                const token = getJwtToken();
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                setUser(payload.user);
+                const response = await fetch('http://localhost:3001/api/users/getId', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setUserId(data.userId);
+
             } catch (error) {
-                console.error('Token obtained failed:', error);
+                console.error('Failed to fetch user data:', error);
             }
         }
 
-        verifyToken();
+        fetchUserId();
     }, []);
+
     function getStepContent(step) {
         switch (step) {
             case 0:
@@ -45,10 +59,10 @@ const EmployeeForm = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
     const handleSubmit = async () => {
-        const formDataWithUserId = { ...formData, userId: user.id };
-        const workDataWithUserId = { ...workData, userId: user.id };
-        const referenceWithUserId = { ...reference, userId: user.id };
-        const emergencyContactsWithUserId = emergencyContacts.map(contact => ({ ...contact, userId: user.id }));
+        const formDataWithUserId = { ...formData, userId };
+        const workDataWithUserId = { ...workData,  userId };
+        const referenceWithUserId = { ...reference,  userId };
+        const emergencyContactsWithUserId = emergencyContacts.map(contact => ({ ...contact, userId: userId }));
         try {
             const response = await fetch('http://localhost:3001/api/users/saveData', {
                 method: 'POST',

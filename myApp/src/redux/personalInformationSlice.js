@@ -8,6 +8,7 @@ export const personalInformationSlice = createSlice({
         middleName: '',
         lastName: '',
         avatar: '',
+        preferName: '',
         dateOfBirth: '',
         streetAddress: '',
         streetAddress2: '',

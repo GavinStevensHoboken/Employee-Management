@@ -80,13 +80,18 @@ const UserForm = () => {
                             </label>
                         </div>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3}>
+                        <TextField fullWidth variant="outlined" label="Prefered Name" name="preferName"
+                                   value={formData.preferName}
+                                   onChange={handleChange}/>
+                    </Grid>
+                    <Grid item xs={12} md={3}>
                         <TextField fullWidth variant="outlined" label="Date of Birth" type="date" name="dateOfBirth"
                                    value={formData.dateOfBirth} InputLabelProps={{shrink: true}}
                                    onChange={handleChange}/>
                     </Grid>
 
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={6}>
                         <FormControl component="fieldset" fullWidth>
                             <FormLabel component="legend">Gender</FormLabel>
                             <RadioGroup row name="gender" value={formData.gender} onChange={handleChange}>

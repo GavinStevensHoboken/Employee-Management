@@ -50,8 +50,15 @@ function NavBar() {
         
     };
     const handleHiring = () => {
+        handleClose();
+        navigate('/management');
         
     };
+
+    const handleRegistration = () => {
+        handleClose();
+        navigate('/registrations');
+    }
 
     return (
         <AppBar className="app-bar" position="static">
@@ -82,6 +89,7 @@ function NavBar() {
                             <MenuItem onClick={handleEmployee}>Employee</MenuItem>
                             <MenuItem onClick={handleVisa}>Visa</MenuItem>
                             <MenuItem onClick={handleHiring}>Hiring</MenuItem>
+                            <MenuItem onClick={handleRegistration}>Registration</MenuItem>
                         </Menu>
                 </Box>
                 <Button color="inherit" onClick={handleSign}>{isLoggedIn ? 'Sign Out' : 'Sign In'}</Button>
