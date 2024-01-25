@@ -105,7 +105,7 @@ router.post('/saveData', async (req, res) => {
             .catch(err => console.error('Error saving referenceDocuments:', err));
 
         const savePromises = references.emergencyContactsWithUserId.map(contactData => {
-            const emergencyContact = new EmergencyContact(contactData);
+            const emergencyContact  = new EmergencyContact(contactData);
             return emergencyContact.save();
         });
 
@@ -181,7 +181,50 @@ router.put('/updatePersonalInformation', authVerifier, async (req, res) => {
         res.status(500).json({ message: 'Error updating personal information' });
     }
 });
+router.put('/updateWorkInformation', authVerifier, async (req, res) => {
+    const updatedData = req.body;
+    const userId = req.user.id;
 
+    try {
+        const workInfo = await WorkInformation.findOne({ userId: userId });
+        if (!workInfo) {
+            return res.status(200).json({ message: 'Work information not found for the user.' });
+        }
+        const result = await WorkInformation.findByIdAndUpdate(
+            workInfo._id,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: 'Personal information updated successfully',
+            updatedInfo: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating personal information' });
+    }
+});
+router.put('/updateEmergencyContacts/:id', authVerifier, async (req, res) => {
+    const updatedData = req.body;
+    const contactId = req.params.id;
+
+    try {
+        const result = await EmergencyContact.findByIdAndUpdate(
+            contactId,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: 'Personal information updated successfully',
+            updatedInfo: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating personal information' });
+    }
+});
 router.post('/updateStatus/:id', authVerifier, async (req, res) => {
     const { applyStatus } = req.body;
     const userId = req.params.id;

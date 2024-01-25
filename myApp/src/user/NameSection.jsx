@@ -21,7 +21,7 @@ const NameSection = ({ data }) => {
         middleName: data.middleName,
         preferName: data.preferName,
         email: data.email,
-        ssn: data.ssn,
+        ssn: data.work.ssn,
         dateOfBirth: data.dateOfBirth,
         gender: data.gender,
         avatar: data.avatar
@@ -73,7 +73,7 @@ const NameSection = ({ data }) => {
         if (key === 'avatar') return null;
 
         let displayValue = value === undefined ? '' : value;
-        if (key === 'Birthday') {
+        if (key === 'dateOfBirth') {
             const date = new Date(value);
             displayValue = `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
         }
@@ -87,7 +87,7 @@ const NameSection = ({ data }) => {
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
-                type={key === 'Birthday' ? 'date' : 'text'}
+                type={key === 'dateOfBirth' ? 'date' : 'text'}
             />
         ) : (
             <ListItem key={key} style={{ padding: '4px 0' }}>

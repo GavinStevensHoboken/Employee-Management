@@ -10,6 +10,7 @@ import {
     ListItemText,
     List
 } from '@mui/material';
+import {getJwtToken} from "../utils/jwtTokenUtils.js";
 
 const AddressSection = ({ data }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -29,9 +30,28 @@ const AddressSection = ({ data }) => {
         setIsEditing(false);
     };
 
-    const handleSaveClick = () => {
+    const handleSaveClick = async () => {
         setIsEditing(false);
-        // Handle save logic here
+        const token = getJwtToken();
+        try {
+            const response = await fetch('http://localhost:3001/api/users/updatePersonalInformation', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(addressInfo)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error('Save failed:', error);
+        }
     };
 
     const handleChange = (e) => {
