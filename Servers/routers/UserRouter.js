@@ -14,7 +14,7 @@ const { auth: authVerifier } = require('../middleware/auth');
 
 router.post('/register', async (req, res) => {
     try {
-        const { username, password, email, type } = req.body;
+        const { username, password, email, type, applyStatus } = req.body;
         let user = await User.findOne({ email });
         if (user) {
             return res.status(409).json({ message: 'User already exists, please choose another email address.' });
@@ -27,7 +27,8 @@ router.post('/register', async (req, res) => {
             username,
             password: hashedPassword,
             email,
-            type
+            type,
+            applyStatus
         });
 
         await user.save();
@@ -57,7 +58,8 @@ router.post('/login', async (req, res) => {
             user: {
                 id: user._id,
                 email: user.email,
-                applyStatus: user.applyStatus
+                applyStatus: user.applyStatus,
+                feedback: user.feedback
             }
         };
         const token = await jwt.sign(payload, process.env.JWT_SECRET, {
@@ -103,7 +105,7 @@ router.post('/saveData', async (req, res) => {
             .catch(err => console.error('Error saving referenceDocuments:', err));
 
         const savePromises = references.emergencyContactsWithUserId.map(contactData => {
-            const emergencyContact = new EmergencyContact(contactData);
+            const emergencyContact  = new EmergencyContact(contactData);
             return emergencyContact.save();
         });
 
@@ -131,13 +133,14 @@ router.post('/getId', authVerifier, async (req, res) => {
 
     return res.status(200).json({ userId: user.id });
 });
-router.post('/getStatus', authVerifier, async (req, res) => {
+
+router.post('/getStatusAndFeedback', authVerifier, async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ message: 'unauthorized' });
     }
 
     const user = req.user;
-    return res.status(200).json({ applyStatus: user.applyStatus });
+    return res.status(200).json({ feedback: user.feedback, applyStatus: user.applyStatus });
 });
 
 router.post('/updateStatus', authVerifier, async (req, res) => {
@@ -149,6 +152,117 @@ router.post('/updateStatus', authVerifier, async (req, res) => {
             return res.status(404).json({ message: 'User not found.' });
         }
         res.status(200).json({ message: 'Apply status updated successfully.'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+router.put('/updatePersonalInformation', authVerifier, async (req, res) => {
+    const updatedData = req.body;
+    const userId = req.user.id;
+
+    try {
+        const personalInfo = await PersonalInformation.findOne({ userId: userId });
+        if (!personalInfo) {
+            return res.status(200).json({ message: 'Personal information not found for the user.' });
+        }
+        const result = await PersonalInformation.findByIdAndUpdate(
+            personalInfo._id,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: 'Personal information updated successfully',
+            updatedInfo: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating personal information' });
+    }
+});
+router.put('/updateWorkInformation', authVerifier, async (req, res) => {
+    const updatedData = req.body;
+    const userId = req.user.id;
+
+    try {
+        const workInfo = await WorkInformation.findOne({ userId: userId });
+        if (!workInfo) {
+            return res.status(200).json({ message: 'Work information not found for the user.' });
+        }
+        const result = await WorkInformation.findByIdAndUpdate(
+            workInfo._id,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: 'Personal information updated successfully',
+            updatedInfo: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating personal information' });
+    }
+});
+router.put('/updateEmergencyContacts/:id', authVerifier, async (req, res) => {
+    const updatedData = req.body;
+    const contactId = req.params.id;
+
+    try {
+        const result = await EmergencyContact.findByIdAndUpdate(
+            contactId,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: 'Personal information updated successfully',
+            updatedInfo: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating personal information' });
+    }
+});
+router.post('/updateStatus/:id', authVerifier, async (req, res) => {
+    const { applyStatus } = req.body;
+    const userId = req.params.id;
+    try {
+        const user = await User.findByIdAndUpdate(userId, { applyStatus: applyStatus }, { new: true });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json({ message: 'Apply status updated successfully.'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
+router.post('/updateFeedback/:id', authVerifier, async (req, res) => {
+    const { feedback } = req.body;
+    const userId = req.params.id;
+    try {
+        const user = await User.findByIdAndUpdate(userId, { feedback: feedback }, { new: true });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json({ message: 'Apply feedback updated successfully.'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
+router.get('/:id', authVerifier, async (req, res) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json(user);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error.' });

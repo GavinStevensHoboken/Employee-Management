@@ -6,9 +6,11 @@ const PersonalInformation = require('../models/personalInformationSchema');
 const WorkInformation = require('../models/workInformationSchema');
 const EmergencyContact = require('../models/emergencyContactSchema');
 const ReferenceInfo = require('../models/referenceSchema');
+const User = require('../models/User');
 const {getAllProfiles} = require('../services/profileService');
 
 const jwt = require('jsonwebtoken');
+const { lte } = require('lodash');
 
 
 
@@ -56,7 +58,28 @@ const StoreApplications = async (req, res) => {
         console.error(error.message);
     }
 }
+const UpdateApplications = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const email = req.user.email;
+        const application = await Application.findOne({ email });
+        if (!application) {
+            res.status(200).json({ message: 'Application information not found for the user.' });
+        }
+        const result = await Application.findByIdAndUpdate(
+            application._id,
+            { status },
+            { new: true, runValidators: true }
+        );
 
+        if (!result) {
+            res.status(200).json({ message: 'Application not found.' });
+        }
+        res.status(200).json({ message: 'Application status updated successfully.'});
+    } catch (error) {
+        console.error(error.message);
+    }
+}
 
 const RegistrationLink = async (req, res) => {
     const { email, name } = req.body;
@@ -97,7 +120,7 @@ const ApplicationForms = async (req, res) => {
         const personalData = await PersonalInformation.findOne({ userId: userId });
         const workData = await WorkInformation.findOne({ userId: userId });
         const referenceData = await ReferenceInfo.findOne({ userId: userId });
-        const emergencyContactData = await EmergencyContact.findOne({ userId: userId});
+        const emergencyContactData = await EmergencyContact.find({ userId: userId });
 
         res.json({
             personal: personalData,
@@ -122,10 +145,37 @@ const GetAllProfilesForHr = async (req, res) => {
 
 const GetAllPerson = async (req, res) => {
     try {
-        const personalData = await PersonalInformation.find();
-        res.json(personalData);
+        const filter = req.query.filter;
+        if(filter){
+            const users = await User.find({ applyStatus: filter });
+            const userIds = users.map(user => user._id);
+            const personalData = await PersonalInformation.find({
+                userId: { $in: userIds }
+            });
+
+            res.json(personalData);
+        }else{
+            const personalData = await PersonalInformation.find();
+            res.json(personalData);
+        }
+        
+
     } catch (error) {
         res.status(500).send('Error retrieving personal data');
+    }
+}
+
+const GetWorkDataByUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const workData = await WorkInformation.findOne({userId: userId});
+        if (workData) {
+            res.json(workData)
+        }
+         
+
+    } catch (error) {
+        res.status(500).send('Error retrieving work data');
     }
 }
 
@@ -134,7 +184,7 @@ const GetAllRegistration = async (req, res) => {
         const applicationData = await Application.find();
         res.json(applicationData);
     } catch (error) {
-        res.status(500).send('Error retrieving personal data');
+        res.status(500).send('Error retrieving registration data');
     }
 }
 
@@ -145,5 +195,7 @@ module.exports = {
     GetAllProfilesForHr,
     GetAllPerson,
     GetAllRegistration,
-    StoreApplications
+    StoreApplications,
+    GetWorkDataByUser,
+    UpdateApplications
 };

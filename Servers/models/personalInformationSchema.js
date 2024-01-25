@@ -7,7 +7,8 @@ const personalInformationSchema = new mongoose.Schema({
     middleName: { type: String, default: '' },
     lastName: { type: String, default: '' },
     avatar: { type: String, default: '' },
-    dateOfBirth: { type: Date }, // 或者根据需要将类型设置为 String
+    preferName: { type: String, default: '' },
+    dateOfBirth: { type: Date },
     streetAddress: { type: String, default: '' },
     streetAddress2: { type: String, default: '' },
     city: { type: String, default: '' },
@@ -19,7 +20,7 @@ const personalInformationSchema = new mongoose.Schema({
     homePhone: { type: String, default: '' },
     cellPhone: { type: String, default: '' },
 }, {
-    timestamps: true // 自动添加文档的 createdAt 和 updatedAt 字段
+    timestamps: true
 });
 
 const PersonalInformation = mongoose.model('PersonalInformation', personalInformationSchema);

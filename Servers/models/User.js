@@ -21,8 +21,12 @@ const userSchema = new mongoose.Schema({
     },
     applyStatus: {
         type: String,
-        default: 'no',
+        default: 'Pending',
         required: true
+    },
+    feedback: {
+        type: String,
+        default: ''
     }
 });
 

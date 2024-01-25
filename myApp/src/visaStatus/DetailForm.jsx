@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Typography, Paper, TextField, List, ListItem, ListItemText, Dialog, DialogTitle, DialogContent, DialogActions, Button, Container  } from '@mui/material';
+import { Grid, Typography, Paper, TextField, List, ListItem, DialogContentText, Dialog, DialogTitle, DialogContent, DialogActions, Button, Container  } from '@mui/material';
+import { getJwtToken } from '../utils/jwtTokenUtils';
+import { useNavigate } from 'react-router-dom';
 
 const UserInfoDialog = () => {
     const [userInfo, setUserInfo] = useState(null);
+    const [user, setUser] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [feedback, setFeedback] = useState('');
     const { userId } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (userId) {
@@ -12,9 +19,14 @@ const UserInfoDialog = () => {
                 .then(response => response.json())
                 .then(data => setUserInfo(data))
                 .catch(error => console.error('Error fetching user info:', error));
+
+            fetch(`http://localhost:3001/api/users/${userId}`)
+                .then(response => response.json())
+                .then(data => setUser(data))
+                .catch(error => console.error('Error fetching user info:', error));
         }
     }, [userId]);
-  
+
     const filterData = (dataObject) => {
         const excludeFields = ['_id', 'userId', '__v', 'createdAt', 'updatedAt'];
         return Object.entries(dataObject)
@@ -45,11 +57,99 @@ const UserInfoDialog = () => {
         />
     );
 
+    const handleApprove = async () => {
+        const token = getJwtToken();
+        try {
+            const response = await fetch(`http://localhost:3001/api/users/updateStatus/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ applyStatus: "Approved" })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            navigate('/management')
+        } catch (error) {
+            console.error('There was an error updating the apply status', error);
+        }
+    }
+
+    const handleReject = async () => {
+        setDialogOpen(true)
+    }
+
+    const handleRejectSubmit = async () => {
+        const token = getJwtToken();
+        try {
+            const response = await fetch(`http://localhost:3001/api/users/updateStatus/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ applyStatus: "Rejected" })
+            }); 
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            if (response.ok){
+                const res = await fetch(`http://localhost:3001/api/users/updateFeedback/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ feedback: feedback })
+                }); 
+                if (!res.ok){
+                    throw new Error(`HTTP error! Feedback status: ${res.status}`);
+                }
+            }
+
+            navigate('/management')
+        } catch (error) {
+            console.error('There was an error updating the apply status', error);
+        }
+        setDialogOpen(false);
+    }
+    
+    const handleFeedback = () => {
+        setOpen(true);
+    };
+
+    const handleFeedbackSubmit = async () => {
+        const token = getJwtToken();
+        try{
+            const res = await fetch(`http://localhost:3001/api/users/updateFeedback/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ feedback: feedback })
+            }); 
+
+            if (!res.ok){
+                throw new Error(`HTTP error! Feedback status: ${res.status}`);
+            }
+            navigate('/management')
+        } catch (error) {
+            console.error('There was an error updating the feedbacks', error);
+        }
+    };
+
     return (
         <Container>
             <Paper style={{ padding: 16, marginTop: 16 }}>
                 <Typography variant="h6" gutterBottom>Summary</Typography>
-                <Grid container spacing={2}>
+                <Grid container spacing={3}>
                     <Grid item xs={12} sm={4}>
                         <Typography variant="subtitle1" gutterBottom>Personal Details</Typography>
                         {personal && Object.entries(filterData(personal)).map(([key, value]) => (
@@ -93,8 +193,57 @@ const UserInfoDialog = () => {
                             </div>
                         ))}
                     </Grid>
+                    {user && user.applyStatus === "Pending" ?  (<Button sx={{margin: '15px'}} onClick={() => handleFeedback()}>Give Feedback</Button>) : ('')}
+                    {user && user.applyStatus === "Pending" ?  (<Button sx={{margin: '15px'}} onClick={() => handleApprove()}>Approve</Button>) : ('')}
+                    {user && user.applyStatus === "Pending" ?  (<Button sx={{margin: '15px'}} onClick={() => handleReject()}>Reject</Button>) : ('')}
+                    
                 </Grid>
             </Paper>
+
+            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+                <DialogTitle>Reject with Feedbacks</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Please Provide Feedbacks for Rejection:</DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="feedback"
+                        label="Feedback"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleRejectSubmit}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>Feedbacks</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Please Provide Feedbacks:</DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="feedback"
+                        label="Feedback"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button onClick={handleFeedbackSubmit}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+
         </Container>
     );
 };

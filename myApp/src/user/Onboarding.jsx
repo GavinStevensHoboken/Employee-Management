@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 const StatusCard = () => {
     const [status, setStatus] = useState('no');
+    const [feedback, setFeedback] = useState('');
     const navigate = useNavigate();
     useEffect(() => {
         async function fetchUserStatus() {
             const token = getJwtToken();
             try {
-                const response = await fetch('http://localhost:3001/api/users/getStatus', {
+                const response = await fetch('http://localhost:3001/api/users/getStatusAndFeedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -24,6 +25,10 @@ const StatusCard = () => {
 
                 const data = await response.json();
                 setStatus(data.applyStatus);
+                setFeedback(data.feedback);
+                if(data.applyStatus === "Approve"){
+                    navigate('/home');
+                }
 
             } catch (error) {
                 console.error('Failed to fetch user data:', error);
@@ -62,7 +67,7 @@ const StatusCard = () => {
                             rows={4}
                             variant="outlined"
                             margin="normal"
-                            value="Please wait for HR to review your application."
+                            value={feedback}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -70,7 +75,7 @@ const StatusCard = () => {
                         />
 
                         <Button variant="contained" color="primary" fullWidth>
-                            Edit application
+                            View application
                         </Button>
                     </>
                 ) : (
@@ -79,7 +84,7 @@ const StatusCard = () => {
                             Start Your First Application
                         </Typography>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ marginBottom: '20px', width: '100%' }}> {/* 控制按钮宽度 */}
+                            <div style={{ marginBottom: '20px', width: '100%' }}> {}
                                 <Button
                                     variant="contained"
                                     color="primary"
