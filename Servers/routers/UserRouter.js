@@ -14,7 +14,7 @@ const { auth: authVerifier } = require('../middleware/auth');
 
 router.post('/register', async (req, res) => {
     try {
-        const { username, password, email, type } = req.body;
+        const { username, password, email, type, applyStatus } = req.body;
         let user = await User.findOne({ email });
         if (user) {
             return res.status(409).json({ message: 'User already exists, please choose another email address.' });
@@ -27,7 +27,8 @@ router.post('/register', async (req, res) => {
             username,
             password: hashedPassword,
             email,
-            type
+            type,
+            applyStatus
         });
 
         await user.save();
@@ -57,7 +58,8 @@ router.post('/login', async (req, res) => {
             user: {
                 id: user._id,
                 email: user.email,
-                applyStatus: user.applyStatus
+                applyStatus: user.applyStatus,
+                feedback: user.feedback
             }
         };
         const token = await jwt.sign(payload, process.env.JWT_SECRET, {
@@ -132,13 +134,13 @@ router.post('/getId', authVerifier, async (req, res) => {
     return res.status(200).json({ userId: user.id });
 });
 
-router.post('/getStatus', authVerifier, async (req, res) => {
+router.post('/getStatusAndFeedback', authVerifier, async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ message: 'unauthorized' });
     }
 
     const user = req.user;
-    return res.status(200).json({ applyStatus: user.applyStatus });
+    return res.status(200).json({ feedback: user.feedback, applyStatus: user.applyStatus });
 });
 
 router.post('/updateStatus', authVerifier, async (req, res) => {
@@ -153,6 +155,30 @@ router.post('/updateStatus', authVerifier, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error.' });
+    }
+});
+router.put('/updatePersonalInformation', authVerifier, async (req, res) => {
+    const updatedData = req.body;
+    const userId = req.user.id;
+
+    try {
+        const personalInfo = await PersonalInformation.findOne({ userId: userId });
+        if (!personalInfo) {
+            return res.status(200).json({ message: 'Personal information not found for the user.' });
+        }
+        const result = await PersonalInformation.findByIdAndUpdate(
+            personalInfo._id,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            message: 'Personal information updated successfully',
+            updatedInfo: result
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating personal information' });
     }
 });
 

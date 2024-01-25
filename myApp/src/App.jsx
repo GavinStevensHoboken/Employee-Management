@@ -13,6 +13,7 @@ import UserInfoDialog from './visaStatus/DetailForm.jsx';
 import Registrations from './visaStatus/RegistrationManagement.jsx';
 import InviteUser from "./user/inviteToRegister.jsx";
 import EmployeeProfilesDetails from './employees/employeeProfilesHRView.jsx';
+import PersonalInformationPage from "./user/PersonalInfo.jsx";
 function App() {
     return (
         <Router>
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/status" element={<LayoutWithNavBar><StatusCard/></LayoutWithNavBar>} />
                 <Route path="/application" element={<LayoutWithNavBar><EmployeeForm/></LayoutWithNavBar>} />
                 <Route path="/visafiles" element={<LayoutWithNavBar><Visa/></LayoutWithNavBar>}/>
+                <Route path="/home" element={<LayoutWithNavBar><PersonalInformationPage/></LayoutWithNavBar>}/>
                 <Route path="/inviteToRegister" element={<InviteUser/>} />
             </Routes>
         </Router>

@@ -40,8 +40,7 @@ export default function LogIn() {
         const data = new FormData(event.currentTarget);
         const userData = {
             email: data.get('email'),
-            password: data.get('password'),
-            applyStatus: data.get('applyStatus')
+            password: data.get('password')
         };
 
         try {

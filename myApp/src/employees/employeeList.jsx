@@ -41,7 +41,7 @@ const EmployeeList = ({ employees }) => {
               primary={<MuiLink component="button" variant="body2" sx={{textDecoration: 'none'}}>
                 {employee.firstName}&nbsp;
                 {employee.lastName}&nbsp;&nbsp;&nbsp;
-                ({employee.preferredName ?  (employee.preferredName) : ''})
+                ({employee.preferName ?  (employee.preferName) : ''})
                 </MuiLink>}
             />
           </ListItem>
