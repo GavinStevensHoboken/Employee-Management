@@ -99,7 +99,7 @@ const PersonalInformationPage = () => {
         <Container maxWidth="1200px">
             <Grid container spacing={1}>
                 <Grid item xs={12} md={3}>
-                    <NameSection data={userData.personal}/>
+                    <NameSection data={{ ...userData.personal, work: userData.work }} />
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <Grid container spacing={1}>

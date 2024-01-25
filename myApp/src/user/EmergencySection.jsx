@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Container,
     Paper,
@@ -12,42 +12,77 @@ import {
 } from '@mui/material';
 
 const EmergencyContactSection = ({ data }) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [emergencyContact, setEmergencyContact] = useState({
-        firstName: data?.firstName || '',
-        lastName: data?.lastName || '',
-        middleName: data?.middleName || '',
-        phone: data?.phone || '',
-        email: data?.email || '',
-        relationship: data?.relationship || ''
-    });
+    const [emergencyContacts, setEmergencyContacts] = useState([]);
+    const [isEditing, setIsEditing] = useState([]);
+    useEffect(() => {
+        const updatedEmergencyContacts = data.map((data) => ({
+            _id : data?._id || '',
+            firstName: data?.firstName || '',
+            lastName: data?.lastName || '',
+            middleName: data?.middleName || '',
+            phone: data?.phone || '',
+            email: data?.email || '',
+            relationship: data?.relationship || ''
+        }));
 
-    const handleEditClick = () => {
-        setIsEditing(true);
+        setEmergencyContacts(updatedEmergencyContacts);
+        setIsEditing(emergencyContacts.map(() => false));
+    }, []);
+    const handleEditClick = (index) => {
+        const updatedIsEditing = [...isEditing];
+        updatedIsEditing[index] = true;
+        setIsEditing(updatedIsEditing);
     };
 
-    const handleCancelClick = () => {
-        setIsEditing(false);
+    const handleCancelClick = (index) => {
+        const updatedIsEditing = [...isEditing];
+        updatedIsEditing[index] = false;
+        setIsEditing(updatedIsEditing);
     };
 
-    const handleSaveClick = () => {
-        setIsEditing(false);
-        // Handle save logic here, like sending data to the server
+    const handleSaveClick = async (index) => {
+        const updatedIsEditing = [...isEditing];
+        updatedIsEditing[index] = false;
+        setIsEditing(updatedIsEditing);
+        try {
+            const response = await fetch(`http://localhost:3001/api/users/updateEmergencyContacts/${emergencyContacts[index]._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(emergencyContacts[index]),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Failed to update contact:', error);
+        }
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e, index) => {
         const { name, value } = e.target;
-        setEmergencyContact({ ...emergencyContact, [name]: value });
+        const updatedContacts = [...emergencyContacts];
+        const updatedContact = { ...updatedContacts[index], [name]: value };
+        updatedContacts[index] = updatedContact;
+        setEmergencyContacts(updatedContacts);
     };
 
-    const renderField = (key, value) => {
-        return isEditing ? (
+
+    const renderField = (key, value, index) => {
+        if(key === '_id')
+            return null;
+        return isEditing[index] ? (
             <TextField
                 key={key}
                 label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
                 value={value}
                 name={key}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, index)}
                 margin="normal"
                 fullWidth
             />
@@ -62,32 +97,34 @@ const EmergencyContactSection = ({ data }) => {
 
     return (
         <Container maxWidth="sm">
-            <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', maxWidth: '300px' }}>
-                <Typography variant="h6" gutterBottom>
-                    Emergency Contact
-                </Typography>
+            {emergencyContacts.map((emergencyContact, index) => (
+                <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', maxWidth: '300px' }} key={index}>
+                    <Typography variant="h6" gutterBottom>
+                        Emergency Contact {index + 1}
+                    </Typography>
 
-                <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-                    {Object.entries(emergencyContact).map(([key, value]) => renderField(key, value))}
-                </Box>
+                    <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+                        {Object.entries(emergencyContact).map(([key, value]) => renderField(key, value, index))}
+                    </Box>
 
-                <Box mt={2} display="flex" justifyContent="flex-end">
-                    {!isEditing ? (
-                        <Button variant="contained" color="primary" onClick={handleEditClick}>
-                            Edit
-                        </Button>
-                    ) : (
-                        <>
-                            <Button variant="outlined" color="secondary" onClick={handleCancelClick} style={{ marginRight: '8px' }}>
-                                Cancel
+                    <Box mt={2} display="flex" justifyContent="flex-end">
+                        {!isEditing[index] ? (
+                            <Button variant="contained" color="primary" onClick={() => handleEditClick(index)}>
+                                Edit
                             </Button>
-                            <Button variant="contained" color="primary" onClick={handleSaveClick}>
-                                Save
-                            </Button>
-                        </>
-                    )}
-                </Box>
-            </Paper>
+                        ) : (
+                            <>
+                                <Button variant="outlined" color="secondary"  onClick={() => handleCancelClick(index)}  style={{ marginRight: '8px' }}>
+                                    Cancel
+                                </Button>
+                                <Button variant="contained" color="primary" onClick={() => handleSaveClick(index)}>
+                                    Save
+                                </Button>
+                            </>
+                        )}
+                    </Box>
+                </Paper>
+            ))}
         </Container>
     );
 };
