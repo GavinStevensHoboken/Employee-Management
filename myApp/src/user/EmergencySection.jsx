@@ -16,13 +16,13 @@ const EmergencyContactSection = ({ data }) => {
     const [isEditing, setIsEditing] = useState([]);
     useEffect(() => {
         const updatedEmergencyContacts = data.map((data) => ({
-            _id : data._id || '',
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
-            middleName: data.middleName || '',
-            phone: data.phone || '',
-            email: data.email || '',
-            relationship: data.relationship || ''
+            _id : data?._id || '',
+            firstName: data?.firstName || '',
+            lastName: data?.lastName || '',
+            middleName: data?.middleName || '',
+            phone: data?.phone || '',
+            email: data?.email || '',
+            relationship: data?.relationship || ''
         }));
 
         setEmergencyContacts(updatedEmergencyContacts);

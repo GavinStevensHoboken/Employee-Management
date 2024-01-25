@@ -152,6 +152,7 @@ const GetAllPerson = async (req, res) => {
             const personalData = await PersonalInformation.find({
                 userId: { $in: userIds }
             });
+
             res.json(personalData);
         }else{
             const personalData = await PersonalInformation.find();
@@ -164,12 +165,26 @@ const GetAllPerson = async (req, res) => {
     }
 }
 
+const GetWorkDataByUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const workData = await WorkInformation.findOne({userId: userId});
+        if (workData) {
+            res.json(workData)
+        }
+         
+
+    } catch (error) {
+        res.status(500).send('Error retrieving work data');
+    }
+}
+
 const GetAllRegistration = async (req, res) => {
     try {
         const applicationData = await Application.find();
         res.json(applicationData);
     } catch (error) {
-        res.status(500).send('Error retrieving personal data');
+        res.status(500).send('Error retrieving registration data');
     }
 }
 
@@ -181,5 +196,6 @@ module.exports = {
     GetAllPerson,
     GetAllRegistration,
     StoreApplications,
+    GetWorkDataByUser,
     UpdateApplications
 };
