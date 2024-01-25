@@ -5,12 +5,23 @@ import './employeeList.css';
 
 const EmployeeList = ({ employees }) => {
   const [open, setOpen] = useState(false);
+  const [workformdata, setWorkformdata] = useState({});
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const navigate = useNavigate();
 
-  const handleClickOpen = (employee) => {
+  const handleClickOpen = async (employee) => {
     setSelectedEmployee(employee);
-    setOpen(true);
+    try{
+      const response = await fetch(`http://localhost:3001/api/workdata/${employee.userId}`);
+      if (response.ok){
+        const workdata = await response.json();
+        setWorkformdata(workdata);
+        setOpen(true);
+      }
+      
+    }catch(err){
+      console.error(err.message)
+    }
   };
 
   const handleClose = () => {
@@ -18,7 +29,7 @@ const EmployeeList = ({ employees }) => {
   };
 
   const handleDetail = (userId) => {
-    navigate(`/management/${userId}`);
+    navigate(`/employees/${userId}`);
   };
 
   return (
@@ -27,10 +38,10 @@ const EmployeeList = ({ employees }) => {
         {employees.map(employee => (
           <ListItem key={employee._id} divider onClick={() => handleClickOpen(employee)} className='listItem'>
             <ListItemText 
-              primary={<MuiLink component="button" variant="body2" >
+              primary={<MuiLink component="button" variant="body2" sx={{textDecoration: 'none'}}>
                 {employee.firstName}&nbsp;
                 {employee.lastName}&nbsp;&nbsp;&nbsp;
-                {/* ({employee.name.preferredName ?  (employee.name.preferredName) : ''}) */}
+                ({employee.preferredName ?  (employee.preferredName) : ''})
                 </MuiLink>}
             />
           </ListItem>
@@ -43,8 +54,8 @@ const EmployeeList = ({ employees }) => {
           {selectedEmployee && (
             <div>
               <p>Name: {selectedEmployee.firstName} {selectedEmployee.lastName}</p>
-              {/* <p>Work Authorization Title: {selectedEmployee.employment.visaTitle}</p> */}
-              {/* <p>SSN: {selectedEmployee.ssn}</p> */}
+              <p>Work Authorization Title: {workformdata.workAuthorization}</p>
+              <p>SSN: {workformdata.ssn}</p>
               <p>Cell Phone: {selectedEmployee.cellPhone}</p>
               <p>Email: {selectedEmployee.email}</p>
             </div>

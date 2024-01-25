@@ -85,7 +85,7 @@ const EmployeeForm = () => {
 
             const result = await response.json()
             if (result.message === 'Data saved successfully') {
-                await updateApplyStatus('Pending'); // 假设后端预期的是布尔值true
+                await updateApplyStatus('Pending');
             }
             console.log(result.message);
         } catch (error) {

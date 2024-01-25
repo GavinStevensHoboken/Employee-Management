@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const {auth} = require('../middleware/auth');
 const router = express.Router();
-const { GetEmployeeProfiles } = require('../methods/employeeMethods');
+const { GetEmployeeProfiles, GetWorkDataByUser } = require('../methods/employeeMethods');
 const {createDoc, getDoc, getAllDocs, getDocByUser, updateDoc} = require('../methods/documentMethods');
 const { RegistrationLink, ApplicationForms, GetAllPerson, GetAllProfilesForHr, GetAllRegistration, StoreApplications} = require('../methods/employeeMethods');
 
@@ -22,4 +22,5 @@ router.put('/updateFile', updateDoc);
 router.get('/allvisastatus', GetAllProfilesForHr);
 router.get('/registration', GetAllRegistration);
 router.post('/registration', StoreApplications);
+router.get('/workdata/:id', GetWorkDataByUser);
 module.exports = router;
