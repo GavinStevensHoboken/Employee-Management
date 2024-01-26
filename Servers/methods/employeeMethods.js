@@ -96,7 +96,7 @@ const RegistrationLink = async (req, res) => {
         }
     });
 
-    const registrationLink = `http://localhost:3000/register`;
+    const registrationLink = `http://localhost:3000/register?token=${token}`;
     let mailOptions = {
         from: 'thytaohuiyu@gmail.com',
         to: email,
@@ -214,6 +214,21 @@ const SendNotification = async (req, res) => {
         res.status(500).send('Error sending token.');
     }
 }
+const GetRegTokenInfo = async (req, res) => {
+    try{
+        const token = req.params.token;
+        const tokenInfo = await Application.findOne({token: token});
+        if (tokenInfo) {
+            res.json(tokenInfo)
+        }else{
+            res.status(404).json({message: 'Cannot find token information'})
+        }
+    }catch(err){
+        console.error(err.message);
+        res.status(500).json({message: 'Server Side Error'});
+    }
+
+};
 
 module.exports = {
     GetEmployeeProfiles,
@@ -225,5 +240,6 @@ module.exports = {
     StoreApplications,
     GetWorkDataByUser,
     UpdateApplications,
-    SendNotification
+    SendNotification,
+    GetRegTokenInfo
 };

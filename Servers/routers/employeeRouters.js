@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const {auth} = require('../middleware/auth');
 const router = express.Router();
-const { GetEmployeeProfiles, GetWorkDataByUser } = require('../methods/employeeMethods');
+const { GetEmployeeProfiles, GetWorkDataByUser, GetRegTokenInfo } = require('../methods/employeeMethods');
 const {createDoc, getDoc, getAllDocs, getDocByUser, updateDoc} = require('../methods/documentMethods');
 const { RegistrationLink, ApplicationForms, GetAllPerson, GetAllProfilesForHr, GetAllRegistration, StoreApplications, UpdateApplications, SendNotification} = require('../methods/employeeMethods');
 
@@ -22,6 +22,7 @@ router.put('/updateFile', auth, updateDoc);
 router.get('/allvisastatus', auth, GetAllProfilesForHr);
 router.get('/registration',auth, GetAllRegistration);
 router.post('/registration',auth, StoreApplications);
+router.get('/registration/:token', auth, GetRegTokenInfo)
 router.get('/workdata/:id',auth, GetWorkDataByUser);
 router.post('/UpdateApplications',auth, UpdateApplications);
 router.post('/sendnotification', auth, SendNotification);
