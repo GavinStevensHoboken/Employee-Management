@@ -14,6 +14,7 @@ import Registrations from './visaStatus/RegistrationManagement.jsx';
 import InviteUser from "./user/inviteToRegister.jsx";
 import EmployeeProfilesDetails from './employees/employeeProfilesHRView.jsx';
 import PersonalInformationPage from "./user/PersonalInfo.jsx";
+import NotFoundPage from "./errorPage/404.jsx";
 function App() {
     return (
         <Router>
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/employees/:userId" element={<LayoutWithNavBar><EmployeeProfilesDetails/></LayoutWithNavBar>} />
                 <Route path="/register" element={<SignUp/>}/>
                 <Route path="/login" element={<LogIn/>}/>
+                <Route path="/404" element={<NotFoundPage/>}/>
                 <Route path="/status" element={<LayoutWithNavBar><StatusCard/></LayoutWithNavBar>} />
                 <Route path="/application" element={<LayoutWithNavBar><EmployeeForm/></LayoutWithNavBar>} />
                 <Route path="/visafiles" element={<LayoutWithNavBar><Visa/></LayoutWithNavBar>}/>
