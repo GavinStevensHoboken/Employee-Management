@@ -5,11 +5,8 @@ import { fetchProfiles } from '../../redux/visaOptHrSlice';
 import { getJwtToken } from '../../utils/jwtTokenUtils';
 
 import {
-    Box, Drawer, CssBaseline, AppBar, Toolbar, List, Typography,
-    Divider, ListItem, ListItemButton, ListItemIcon, ListItemText,
+    Box, Drawer, CssBaseline, Toolbar, List, ListItem, ListItemButton, ListItemText,
     } from '@mui/material';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import Opt from './Opt';
 import All from './All';
 const nextStepMap = {0:'Done',1:'opt receipt', 2: 'EAD card', 3: 'i983', 4:'i20', 5: 'Waiting for approval'};
