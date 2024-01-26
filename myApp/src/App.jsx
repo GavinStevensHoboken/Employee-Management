@@ -5,7 +5,7 @@ import SignUp from './user/SignUp.jsx';
 import LayoutWithNavBar from './layout/LayoutWithNavBar.jsx';
 import LogIn from './user/LogIn.jsx'
 import StatusCard from './user/Onboarding.jsx'
-import VisaStatusManagement from './visaStatus/visaStatus.jsx'
+import VisaStatusManagement from './pages/Hr';
 import EmployeeForm from "./employees/employeeApplication.jsx";
 import Visa from './pages/Visa/index.jsx';
 import ApplicationSummary from './visaStatus/HRManagement.jsx';

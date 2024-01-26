@@ -158,7 +158,7 @@ export default function Visa() {
     }
 
     return(
-        <>
+        <div style={{ marginTop: '64px' }}>
         <h1>{title}</h1>
         {enableForm && <form onSubmit={handleSubmit}>
             <div>
@@ -178,6 +178,6 @@ export default function Visa() {
         {!view&&<>No file is selected yet</>}
 
       </div>
-        </>
+        </ div>
     )
 }

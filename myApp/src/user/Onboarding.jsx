@@ -43,7 +43,7 @@ const StatusCard = () => {
     };
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" style={{ marginTop: '64px' }}>
             <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
                 {status === 'Pending' ? (
                     <>

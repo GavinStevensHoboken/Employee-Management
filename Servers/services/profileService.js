@@ -73,16 +73,36 @@ exports.getAllProfiles = async () => {
                 userId: 1,
                 name: {firstName: '$firstName', lastName: '$lastName',preferredName: '$preferredName'},
                 ssn: '$dataB.ssn',
+                email: '$email',
                 employment: {
                     workAuthorization: '$dataB.workAuthorization',
                     startDate: '$dataB.startDate',
-                    endDate: '$dataB.endDate'
+                    endDate: '$dataB.endDate',
+                    
+                    remainingdays: {
+                        $round: [
+                            {
+                              $divide: [
+                                {
+                                  $abs: {
+                                    $subtract: [
+                                      { $toDate: '$dataB.endDate' }, 
+                                      new Date() 
+                                    ]
+                                  }
+                                },
+                                24 * 60 * 60 * 1000 // Convert milliseconds to days
+                              ]
+                            },
+                            2 // Specify the number of decimal places
+                          ]
+                        }
                 },
                 document:{
                     receipt:{
                         link: {$ifNull: ['$receiptLink', null]},
                         status: {
-                            $ifNull:['$dataC.receptLink.status',0]
+                            $ifNull:['$dataC.receipt.status',0]
                         }
                     },
                     ead:{

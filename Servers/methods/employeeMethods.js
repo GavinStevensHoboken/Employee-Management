@@ -188,6 +188,33 @@ const GetAllRegistration = async (req, res) => {
     }
 }
 
+const SendNotification = async (req, res) => {
+    const { email} = req.body;
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail', 
+        secure: false,
+        auth: {
+            user: 'thytaohuiyu@gmail.com',
+            pass: 'itsw jlsi wtww ftak'
+        }
+    });
+    let mailOptions = {
+        from: 'thytaohuiyu@gmail.com',
+        to: email,
+        subject: 'You got a new action',
+        text: 'Hello move forward your next step.'
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).send('Token sent to email.');
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).send('Error sending token.');
+    }
+}
+
 module.exports = {
     GetEmployeeProfiles,
     RegistrationLink,
@@ -197,5 +224,6 @@ module.exports = {
     GetAllRegistration,
     StoreApplications,
     GetWorkDataByUser,
-    UpdateApplications
+    UpdateApplications,
+    SendNotification
 };
