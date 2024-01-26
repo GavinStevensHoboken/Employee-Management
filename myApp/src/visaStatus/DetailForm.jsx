@@ -146,7 +146,7 @@ const UserInfoDialog = () => {
     };
 
     return (
-        <Container>
+        <Container style={{ marginTop: '64px' }}>
             <Paper style={{ padding: 16, marginTop: 16 }}>
                 <Typography variant="h6" gutterBottom>Summary</Typography>
                 <Grid container spacing={3}>

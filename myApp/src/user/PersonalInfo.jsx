@@ -96,7 +96,7 @@ const PersonalInformationPage = () => {
     }
 
     return (
-        <Container maxWidth="1200px">
+        <Container maxWidth="1200px" style={{ marginTop: '64px' }}>
             <Grid container spacing={1}>
                 <Grid item xs={12} md={3}>
                     <NameSection data={{ ...userData.personal, work: userData.work }} />

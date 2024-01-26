@@ -107,7 +107,7 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
     if(status === 2) {
         Document.findOneAndUpdate(
             {employee: employeeId},
-            {$set: {[`${visas[docType]}.status`]:2}, feedback: feedback}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
+            {$set: {[`${visas[docType]}.status`]:3}, feedback: feedback}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
         ).populate('employee')
          .exec()

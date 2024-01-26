@@ -47,7 +47,7 @@ const ApplicationSummary = () => {
     };
 
     return (
-        <Container>
+        <Container style={{ marginTop: '64px' }}>
             <TextField
                 label="Search Employees"
                 variant="outlined"

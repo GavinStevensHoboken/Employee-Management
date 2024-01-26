@@ -5,7 +5,7 @@ const createDoc = async (req,res) => {
         if(!req.file) throw "document not uploaded!"
         const userId = req.user.id
         const fileData = req.file.buffer;
-        const {documentType} = {documentType:req.type} // type:receipt/ead/i983/i20, get from frontend in body
+        const {documentType} = {documentType:req.body.type} // type:receipt/ead/i983/i20, get from frontend in body
         const fileId = await createFile(fileData,req.file.mimetype);
         await addDocument(userId, documentType, fileId);
         res.status(201).json({ message: 'upload successfully!' });
