@@ -44,7 +44,7 @@ const EmployeeForm = () => {
                 }
 
                 const data = await response.json();
-
+                setUserId(data.userId);
             } catch (error) {
                 console.error('Failed to fetch user data:', error);
             }
