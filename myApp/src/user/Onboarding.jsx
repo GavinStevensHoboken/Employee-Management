@@ -7,7 +7,31 @@ const StatusCard = () => {
     const [status, setStatus] = useState('no');
     const [feedback, setFeedback] = useState('');
     const navigate = useNavigate();
+    const [userId, setUserId] = useState(null);
     useEffect(() => {
+        async function fetchUserId() {
+            const token = getJwtToken();
+            try {
+                const response = await fetch('http://localhost:3001/api/users/getId', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.userId;
+
+            } catch (error) {
+                console.error('Failed to fetch user ID:', error);
+                throw error;
+            }
+        }
         async function fetchUserStatus() {
             const token = getJwtToken();
             try {
@@ -34,14 +58,25 @@ const StatusCard = () => {
                 console.error('Failed to fetch user data:', error);
             }
         }
+        (async () => {
+                const id = await fetchUserId();
+                setUserId(id);
+                await fetchUserStatus();
 
-        fetchUserStatus();
+        })();
+
     }, []);
 
     const handleCreateApplication = () => {
         navigate('/application');
     };
+    const handleViewApplicationClick = () => {
+        navigate('/summary');
+    };
 
+    const handleEditApplicationClick = () => {
+        navigate(`/application?id=${userId}`);
+    };
     return (
         <Container maxWidth="sm" style={{ marginTop: '64px' }}>
             <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
@@ -67,15 +102,48 @@ const StatusCard = () => {
                             rows={4}
                             variant="outlined"
                             margin="normal"
-                            value={feedback}
+                            value="Please wait for HR to review your application."
                             InputProps={{
                                 readOnly: true,
                             }}
                             style={{ marginBottom: '20px' }}
                         />
 
-                        <Button variant="contained" color="primary" fullWidth>
+                        <Button variant="contained" color="primary" fullWidth onClick={handleViewApplicationClick}>
                             View application
+                        </Button>
+                    </>
+                ) : status === 'Rejected' ? (
+                    <>
+                        <Typography variant="h6" gutterBottom>
+                            Status
+                        </Typography>
+
+                        <Box border={1} borderColor="error.main" borderRadius={2} padding={2} marginBottom={2}>
+                            <Typography color="error" variant="subtitle1">
+                                Rejected
+                            </Typography>
+                        </Box>
+
+                        <Typography variant="h6" gutterBottom>
+                            Message
+                        </Typography>
+
+                        <TextField
+                            fullWidth
+                            multiline
+                            rows={4}
+                            variant="outlined"
+                            margin="normal"
+                            value="Your application has been rejected. Please contact HR for more details."
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            style={{ marginBottom: '20px' }}
+                        />
+
+                        <Button variant="contained" color="secondary" fullWidth onClick={handleEditApplicationClick}>
+                            Edit application
                         </Button>
                     </>
                 ) : (

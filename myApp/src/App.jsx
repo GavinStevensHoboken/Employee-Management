@@ -15,6 +15,7 @@ import InviteUser from "./user/inviteToRegister.jsx";
 import EmployeeProfilesDetails from './employees/employeeProfilesHRView.jsx';
 import PersonalInformationPage from "./user/PersonalInfo.jsx";
 import NotFoundPage from "./errorPage/404.jsx";
+import SummaryPage from "./user/summary.jsx";
 function App() {
     return (
         <Router>
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/application" element={<LayoutWithNavBar><EmployeeForm/></LayoutWithNavBar>} />
                 <Route path="/visafiles" element={<LayoutWithNavBar><Visa/></LayoutWithNavBar>}/>
                 <Route path="/home" element={<LayoutWithNavBar><PersonalInformationPage/></LayoutWithNavBar>}/>
+                <Route path="/summary" element={<LayoutWithNavBar><SummaryPage/></LayoutWithNavBar>}/>
                 <Route path="/inviteToRegister" element={<InviteUser/>} />
             </Routes>
         </Router>

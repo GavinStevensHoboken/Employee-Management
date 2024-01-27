@@ -27,7 +27,10 @@ const AddressSection = ({ data }) => {
     };
 
     const handleCancelClick = () => {
-        setIsEditing(false);
+        const confirmDiscard = window.confirm("Do you want to discard all of your changes?");
+        if (confirmDiscard) {
+            setIsEditing(false);
+        }
     };
 
     const handleSaveClick = async () => {

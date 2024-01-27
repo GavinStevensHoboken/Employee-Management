@@ -11,12 +11,12 @@ import {
     List
 } from '@mui/material';
 
-const EmergencyContactSection = ({ data }) => {
+const EmergencyContactSection = ({data}) => {
     const [emergencyContacts, setEmergencyContacts] = useState([]);
     const [isEditing, setIsEditing] = useState([]);
     useEffect(() => {
         const updatedEmergencyContacts = data.map((data) => ({
-            _id : data?._id || '',
+            _id: data?._id || '',
             firstName: data?.firstName || '',
             lastName: data?.lastName || '',
             middleName: data?.middleName || '',
@@ -35,9 +35,13 @@ const EmergencyContactSection = ({ data }) => {
     };
 
     const handleCancelClick = (index) => {
-        const updatedIsEditing = [...isEditing];
-        updatedIsEditing[index] = false;
-        setIsEditing(updatedIsEditing);
+        const confirmDiscard = window.confirm("Do you want to discard all of your changes?");
+        if (confirmDiscard) {
+            const updatedIsEditing = [...isEditing];
+            updatedIsEditing[index] = false;
+            setIsEditing(updatedIsEditing);
+        }
+
     };
 
     const handleSaveClick = async (index) => {
@@ -65,16 +69,16 @@ const EmergencyContactSection = ({ data }) => {
     };
 
     const handleChange = (e, index) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         const updatedContacts = [...emergencyContacts];
-        const updatedContact = { ...updatedContacts[index], [name]: value };
+        const updatedContact = {...updatedContacts[index], [name]: value};
         updatedContacts[index] = updatedContact;
         setEmergencyContacts(updatedContacts);
     };
 
 
     const renderField = (key, value, index) => {
-        if(key === '_id')
+        if (key === '_id')
             return null;
         return isEditing[index] ? (
             <TextField
@@ -87,7 +91,7 @@ const EmergencyContactSection = ({ data }) => {
                 fullWidth
             />
         ) : (
-            <ListItem key={key} style={{ padding: '4px 0' }}>
+            <ListItem key={key} style={{padding: '4px 0'}}>
                 <ListItemText
                     primary={`${key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}: ${value}`}
                 />
@@ -98,7 +102,7 @@ const EmergencyContactSection = ({ data }) => {
     return (
         <Container maxWidth="sm">
             {emergencyContacts.map((emergencyContact, index) => (
-                <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', maxWidth: '300px' }} key={index}>
+                <Paper elevation={3} style={{padding: '20px', marginTop: '20px', maxWidth: '300px'}} key={index}>
                     <Typography variant="h6" gutterBottom>
                         Emergency Contact {index + 1}
                     </Typography>
@@ -114,7 +118,8 @@ const EmergencyContactSection = ({ data }) => {
                             </Button>
                         ) : (
                             <>
-                                <Button variant="outlined" color="secondary"  onClick={() => handleCancelClick(index)}  style={{ marginRight: '8px' }}>
+                                <Button variant="outlined" color="secondary" onClick={() => handleCancelClick(index)}
+                                        style={{marginRight: '8px'}}>
                                     Cancel
                                 </Button>
                                 <Button variant="contained" color="primary" onClick={() => handleSaveClick(index)}>

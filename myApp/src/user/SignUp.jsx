@@ -16,7 +16,6 @@ import {IconButton, InputAdornment } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {useNavigate} from "react-router-dom";
-import {getJwtToken} from "../utils/jwtTokenUtils.js";
 import { useLocation } from 'react-router-dom';
 function Copyright(props) {
     return (
@@ -50,7 +49,6 @@ export default function SignUp() {
 
     useEffect(() => {
         async function fetchData() {
-            const token = getJwtToken();
             try {
                 const response = await fetch(`http://localhost:3001/api/registration/${tokenName}`, {
                     method: 'GET',

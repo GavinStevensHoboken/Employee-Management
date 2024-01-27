@@ -17,9 +17,13 @@ export const workInformationSlice = createSlice({
         updateField: (state, action) => {
             const { field, value } = action.payload;
             state[field] = value;
+        },
+        updateWorkInfo:(state, action) => {
+            const { _id, userId, createdAt, updatedAt, __v, ...rest } = action.payload;
+            return rest;
         }
     },
 });
 
-export const { updateField } = workInformationSlice.actions;
+export const { updateField , updateWorkInfo} = workInformationSlice.actions;
 export default workInformationSlice.reducer;

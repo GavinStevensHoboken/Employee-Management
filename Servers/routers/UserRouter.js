@@ -142,7 +142,7 @@ router.post('/getStatusAndFeedback', authVerifier, async (req, res) => {
         return res.status(401).json({ message: 'unauthorized' });
     }
 
-    const user = req.user;
+    const user = await User.findOne({ email:  req.user.email});
     return res.status(200).json({ feedback: user.feedback, applyStatus: user.applyStatus });
 });
 
