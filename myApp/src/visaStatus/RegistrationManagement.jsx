@@ -84,7 +84,7 @@ const Registrations = () => {
         
    
     return (
-        <div>
+        <div style={{ marginTop: '64px' }}>
             <GridList data={data} />
         </div>
     );

@@ -1,22 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {CircularProgress, Container, Grid} from '@mui/material';
-import NameSection from './NameSection';
+import React, {useEffect, useState} from "react";
 import {getJwtToken} from "../utils/jwtTokenUtils.js";
-import AddressSection from "./AddressSection.jsx";
-import ContactSection from "./ContactSection.jsx";
-import EmploymentSection from "./EmploymentSection.jsx";
-import EmergencyContactSection from "./EmergencySection.jsx";
-import DocumentSection from "./DocumentSection.jsx";
-
-const PersonalInformationPage = () => {
+import {Button, CircularProgress, Container, Paper} from "@mui/material";
+import SummaryComponent from "./summaryComponent.jsx";
+import { useNavigate } from 'react-router-dom';
+const SummaryPage = () => {
     const [userData, setUserData] = useState({
         personal: null,
         work: null,
         reference: null,
         emergencyContact: null,
     });
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const handleBackClick = () => {
+        navigate('/status');
+    };
     useEffect(() => {
         async function fetchUserId() {
             const token = getJwtToken();
@@ -56,11 +55,16 @@ const PersonalInformationPage = () => {
                 }
 
                 const data = await response.json();
+                const { _id: personalId, userId: personalUserId, createdAt: personalCreatedAt, updatedAt: personalUpdatedAt, __v : p__v, ...personalRest } = data.personal || {};
+                const { _id: workId, userId: workUserId, createdAt: workCreatedAt, updatedAt: workUpdatedAt,__v : w__v, ...workRest } = data.work || {};
+                const { _id: referenceId, userId: referenceUserId, createdAt: referenceCreatedAt, updatedAt: referenceUpdatedAt, __v : r__v, ...referenceRest } = data.reference || {};
+                const { _id: emergencyContactId, userId: emergencyContactUserId, createdAt: emergencyContactCreatedAt, updatedAt: emergencyContactUpdatedAt, __v : e__v, ...emergencyContactRest } = data.emergencyContact || {};
+
                 setUserData({
-                    personal: data.personal,
-                    work: data.work,
-                    reference: data.reference,
-                    emergencyContact: data.emergencyContact,
+                    personal: personalRest,
+                    work: workRest,
+                    reference: referenceRest,
+                    emergencyContact: emergencyContactRest,
                 });
             } catch (error) {
                 console.error('Failed to fetch application data:', error);
@@ -69,6 +73,8 @@ const PersonalInformationPage = () => {
                 setLoading(false);
             }
         }
+
+
 
         (async () => {
             try {
@@ -80,7 +86,6 @@ const PersonalInformationPage = () => {
             }
         })();
     }, []);
-
 
     if (loading) {
         return (
@@ -96,38 +101,35 @@ const PersonalInformationPage = () => {
     }
 
     return (
-        <Container maxWidth="1200px" style={{ marginTop: '64px' }}>
-            <Grid container spacing={1}>
-                <Grid item xs={12} md={3}>
-                    <NameSection data={{ ...userData.personal, work: userData.work }} />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <Grid container spacing={1}>
-                        <Grid item xs={12}>
-                            <ContactSection data={userData.personal}/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <AddressSection data={userData.personal}/>
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <Grid container spacing={1}>
-                        <Grid item xs={12}>
-                            <EmploymentSection data={userData.work}/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            {/*<DocumentSection data={userData.personal} />*/}
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <EmergencyContactSection data={userData.emergencyContact}/>
-                </Grid>
-            </Grid>
+        <div style={{margin: '20px', marginTop: '70px'}}>
+            <Paper style={{
+                padding: '20px',
+                margin: '20px auto',
+                width: '800px',
+                height: '500px',
+                overflow: 'auto'
+            }}>
+                <SummaryComponent
+                    formData={userData.personal}
+                    workData={userData.work}
+                    reference={userData.reference}
+                    emergencyContacts={userData.emergencyContact}
+                />
+            </Paper>
+            <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+                <Button
+                    onClick={handleBackClick}
+                    style={{
+                        padding: '20px',
+                        width: '800px',
+                    }}
+                >
+                    Back to Status
+                </Button>
+            </div>
+        </div>
 
-        </Container>
     );
-};
+}
 
-export default PersonalInformationPage;
+export default SummaryPage;

@@ -30,9 +30,20 @@ export const referenceAndEmergencyContactsSlice = createSlice({
                 email: '',
                 relationship: ''
             });
-        }
+        },
+        updateReferenceInfo: (state, action) => {
+            const { _id, userId, createdAt, updatedAt, __v, ...rest } = action.payload;
+            state.reference = rest;
+        },
+        updateEmergencyContacts: (state, action) => {
+            const cleanedContacts = action.payload.map(contact => {
+                const { _id, userId, createdAt, updatedAt, __v, ...rest } = contact;
+                return rest;
+            });
+            state.emergencyContacts = cleanedContacts;
+        },
     },
 });
 
-export const { updateReference, updateEmergencyContact, addEmergencyContact } = referenceAndEmergencyContactsSlice.actions;
+export const { updateReference, updateEmergencyContact, addEmergencyContact, updateReferenceInfo, updateEmergencyContacts  } = referenceAndEmergencyContactsSlice.actions;
 export default referenceAndEmergencyContactsSlice.reducer;

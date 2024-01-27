@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,6 +16,7 @@ import {IconButton, InputAdornment } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {useNavigate} from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -28,7 +29,9 @@ function Copyright(props) {
         </Typography>
     );
 }
-
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 const defaultTheme = createTheme();
 
 export default function SignUp() {
@@ -36,8 +39,48 @@ export default function SignUp() {
     const [email, setEmail] = useState('');
     const [isEmailValid, setEmailValid] = useState(true);
     const [emailError, setEmailError] = useState(false);
+    const [UserNameError, setUserNameError] = useState(false);
+    const [PasswordError, setPasswordError] = useState(false);
     const [emailHelperText, setEmailHelperText] = useState("");
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    let query = useQuery();
+    let tokenName = query.get('token');
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch(`http://localhost:3001/api/registration/${tokenName}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const responseBody = await response.json();
+                    console.log(responseBody);
+
+                    const tokenExpires = responseBody.tokenExpires;
+
+                    const expirationDate = new Date(tokenExpires);
+
+                    const currentDate = new Date();
+
+                    if (currentDate > expirationDate) {
+                        console.error('Token has expired');
+                        navigate('/404');
+                    }
+                } else {
+                    navigate('/404');
+                    console.error('Response not OK', await response.text());
+                }
+            } catch (error) {
+                console.error('Server error', error);
+            }
+        }
+        fetchData();
+    }, []);
     const handleEmailChange = (event) => {
         const newEmail = event.target.value;
         setEmail(newEmail);
@@ -80,6 +123,11 @@ export default function SignUp() {
                 setEmailError(true);
                 setEmailHelperText("Email address is already existed.");
                 console.log('Email address already exist.');
+            }else if(response.status === 410){
+                setUserNameError(true);
+                setEmailError(false);
+                setEmailHelperText("");
+                console.log('User name already exist.');
             }else {
                 console.log('Registration failed.');
             }
@@ -88,6 +136,20 @@ export default function SignUp() {
         }
     };
 
+    const handlePasswordChange = (event) => {
+        const newPassword = event.target.value;
+        setPassword(newPassword);
+        validatePassword(newPassword);
+    };
+
+    const validatePassword = (password) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+        if (!regex.test(password)) {
+            setPasswordError(true);
+        } else {
+            setPasswordError(false);
+        }
+    };
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -118,7 +180,8 @@ export default function SignUp() {
                                     id="userName"
                                     label="User Name"
                                     autoFocus
-                                    helperText={true ? "" : ""}
+                                    error={UserNameError}
+                                    helperText={UserNameError ? "Username already exist, please choose other name." : ""}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -144,6 +207,9 @@ export default function SignUp() {
                                     type={showPassword ? 'text' : 'password'}
                                     id="password"
                                     autoComplete="new-password"
+                                    value = {password}
+                                    onChange={handlePasswordChange}
+                                    error = {PasswordError}
                                     InputProps={{
                                         endAdornment: (
                                             <InputAdornment position="end">
@@ -158,7 +224,7 @@ export default function SignUp() {
                                             </InputAdornment>
                                         ),
                                     }}
-                                    helperText={true ? "" : ""}
+                                    helperText={PasswordError ? "Password must include uppercase, lowercase, number, and special character and at least 8 characters." : ""}
                                 />
                             </Grid>
                             <Grid item xs={12}>

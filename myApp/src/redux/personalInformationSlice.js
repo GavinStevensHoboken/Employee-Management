@@ -29,9 +29,13 @@ export const personalInformationSlice = createSlice({
         updateAvatar: (state, action) => {
             state.avatar = action.payload;
         },
+        updatePersonalInfo: (state, action) => {
+            const { _id, userId, createdAt, updatedAt, __v, ...rest } = action.payload;
+            return rest;
+        },
     },
 });
 
-export const { updateField, updateAvatar  } = personalInformationSlice.actions;
+export const { updateField, updateAvatar, updatePersonalInfo  } = personalInformationSlice.actions;
 
 export default personalInformationSlice.reducer;

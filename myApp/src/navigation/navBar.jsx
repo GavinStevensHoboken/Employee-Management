@@ -69,7 +69,7 @@ function NavBar() {
     }
 
     return (
-        <AppBar className="app-bar" position="static">
+        <AppBar className="app-bar" position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Toolbar>
                 <Box sx={{ flexGrow: 1, display: 'flex' }}>
                     <Button color="inherit" component={Link} to="/">Home</Button>
