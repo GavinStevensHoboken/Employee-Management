@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Button, TextField, List, ListItem, ListItemText, Dialog, Typography, DialogActions, DialogContent, DialogContentText, DialogTitle, Link as MuiLink, Box} from '@mui/material';
+import { Container, Button, Link, ListItem, ListItemText, Dialog, Typography, DialogActions, DialogContent, DialogTitle, Link as MuiLink, Box} from '@mui/material';
 import axios from 'axios';
 
 import { getJwtToken } from '../../utils/jwtTokenUtils';
@@ -52,34 +52,72 @@ const AllItem = ({employee}) => {
     return (
       <Container>
         <ListItem key={employee.ssn} divider>
-                        <ListItemText
-                            primary={<MuiLink 
-                                    component="button" 
-                                    variant="body2" 
-                                    onClick={() => handleClickOpen()}
-                                    >{employee.name.firstName}&nbsp;{employee.name.lastName}
-                                </MuiLink>}
-                        />
-                    </ListItem>
+          <ListItemText
+            primary={
+              <MuiLink
+                component="button"
+                variant="body2"
+                onClick={() => handleClickOpen()}
+              >
+                {employee.name.firstName}&nbsp;{employee.name.lastName}
+              </MuiLink>
+            }
+          />
+        </ListItem>
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth={false}>
           <DialogTitle id="employee-details-title">Documents</DialogTitle>
           <DialogContent>
             {fileList && (
               <div>
-                <h1>
-                  {"Receipt: "}
-                </h1>
-                <button onClick={() => handlePreview(fileList.receipt)}> preview</button>
-                <a href={fileList.receipt} download="receipt.pdf"> Download</a>
-                <h2>
-                  {"Ead: "}
-                </h2>
-                <h2>
-                  {"I983: "}
-                </h2>
-                <h2>
-                  {"I20: "}
-                </h2>
+                <h3>{"Receipt: "}</h3>
+                <Box
+                  sx={{typography: "body1","& > :not(style) ~ :not(style)": {ml: 2,},
+                  }}
+                >
+                  <Link href="#" onClick={() => handlePreview(fileList.receipt)}>
+                    preview
+                  </Link>
+                  <Link href={fileList.receipt} download="receipt.pdf">
+                    Download
+                  </Link>
+                </Box>
+
+                <h3>{"Ead: "}</h3>
+                <Box
+                  sx={{typography: "body1","& > :not(style) ~ :not(style)": {ml: 2,},
+                  }}
+                >
+                  <Link href="#" onClick={() => handlePreview(fileList.ead)}>
+                    preview
+                  </Link>
+                  <Link href={fileList.ead} download="ead.pdf">
+                    Download
+                  </Link>
+                </Box>
+                <h3>{"I983: "}</h3>
+                <Box
+                  sx={{typography: "body1","& > :not(style) ~ :not(style)": {ml: 2,},
+                  }}
+                >
+                  <Link href="#" onClick={() => handlePreview(fileList.i983)}>
+                    preview
+                  </Link>
+                  <Link href={fileList.i983} download="i983.pdf">
+                    Download
+                  </Link>
+                </Box>
+                <h3>{"I20: "}</h3>
+                <Box
+                  sx={{typography: "body1","& > :not(style) ~ :not(style)": {ml: 2,},
+                  }}
+                >
+                  <Link href="#" onClick={() => handlePreview(fileList.i20)}>
+                    preview
+                  </Link>
+                  <Link href={fileList.i20} download="i20.pdf">
+                    Download
+                  </Link>
+                </Box>
                 {/* {pdfFile ? (
                   <iframe
                     title="PDF Viewer"
@@ -102,11 +140,15 @@ const AllItem = ({employee}) => {
           </Box>
         </Dialog>
 
-        <Dialog open={previewOpen} onClose={() => setPreviewOpen(false)} fullWidth maxWidth={false}>
+        <Dialog
+          open={previewOpen}
+          onClose={() => setPreviewOpen(false)}
+          fullWidth
+          maxWidth={false}
+        >
           <DialogTitle>Prview Document</DialogTitle>
           <DialogContent>
-            
-            <PdfViewer base64String={previewFile}/>
+            <PdfViewer base64String={previewFile} />
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setPreviewOpen(false)}>Close</Button>
