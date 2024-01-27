@@ -55,8 +55,7 @@ export default function SignUp() {
                 const response = await fetch(`http://localhost:3001/api/registration/${tokenName}`, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Content-Type': 'application/json'
                     }
                 });
 
