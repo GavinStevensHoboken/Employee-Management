@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Button, Box } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
@@ -9,21 +9,29 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { logIn, logOut } from '../redux/authActions';
 import { getJwtToken } from '../utils/jwtTokenUtils';
+import { fetchUserRole } from '../utils/userIdUtils';
 import './navBar.css'
 
 function NavBar() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [role, setRole] = useState('');
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn );
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const open = Boolean(anchorEl);
 
-    useEffect(() => {
+    useEffect( () => {
         const token = getJwtToken();
         if (token) {
-            dispatch(logIn());
+            fetchUserRole()
+                .then(role => {
+                    setRole(role)
+                    dispatch(logIn())});
+            
         }
     },[dispatch])
+
+    console.log(role);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);

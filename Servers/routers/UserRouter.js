@@ -59,7 +59,8 @@ router.post('/login', async (req, res) => {
                 id: user._id,
                 email: user.email,
                 applyStatus: user.applyStatus,
-                feedback: user.feedback
+                feedback: user.feedback,
+                role: user.role
             }
         };
         const token = await jwt.sign(payload, process.env.JWT_SECRET, {
@@ -132,6 +133,16 @@ router.post('/getId', authVerifier, async (req, res) => {
     const user = req.user;
 
     return res.status(200).json({ userId: user.id });
+});
+
+router.post('/getUserRole', authVerifier, async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ message: 'unauthorized' });
+    }
+
+    const user = req.user;
+
+    return res.status(200).json({ role: user.role });
 });
 
 router.post('/getStatusAndFeedback', authVerifier, async (req, res) => {

@@ -49,7 +49,9 @@ const GridList = ({ data }) => {
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => handleGenerateToken(selectedItem.email, selectedItem.name)}>Generate token and send email</Button>
+                        {selectedItem?.token ? 
+                            ('') : 
+                            (<Button onClick={() => handleGenerateToken(selectedItem.email, selectedItem.name)}>Generate token and send email</Button>)}
                         <Button onClick={handleCloseDialog}>Close</Button>  
                     </DialogActions>
                 </Dialog>

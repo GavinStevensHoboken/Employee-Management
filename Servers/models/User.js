@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     feedback: {
         type: String,
         default: ''
+    },
+    role: {
+        type: String,
+        default: ''
     }
 });
 
