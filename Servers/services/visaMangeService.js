@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const visas = {1:'receipt',2:'ead',3:'i983',4:'i20'}; // mapping type number with visa
 // const approalStatus = {0:'new',1:'approved',2:'submitted',3:'rejected'};
-
+// nextStep: 0:没下一步了,1:receipt,2:ead,3:i983,4:i20,5:wait for approve
 
 exports.createFile = async (data, contentType) => {
     const file = new File({
@@ -74,8 +74,9 @@ exports.getAllDocuments = async () => {
 //试验点
 exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback) => {
     const document = await Document.findOne({employee:employeeId});
+    let result;
     if(docType === 4 && status === 1){
-        Document.findOneAndUpdate(
+        result = Document.findOneAndUpdate(
             {employee: employeeId},
             {$set: {[`${visas[docType]}.status`]:1},status:1, nextStep: 0}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
@@ -88,9 +89,10 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
          .catch((err) => {
             throw err;
          });
+    return result;
     }
     if(docType !== 4 && status === 1){
-        Document.findOneAndUpdate(
+        result = Document.findOneAndUpdate(
             {employee: employeeId},
             {$set: {[`${visas[docType]}.status`]:1, nextStep:docType+1}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
@@ -103,9 +105,10 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
          .catch((err) => {
             throw err;
          });
+         return result;
     }
     if(status === 2) {
-        Document.findOneAndUpdate(
+        result = Document.findOneAndUpdate(
             {employee: employeeId},
             {$set: {[`${visas[docType]}.status`]:3}, feedback: feedback}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
@@ -118,5 +121,6 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
          .catch((err) => {
             throw err;
          });
+        return result;
     }
 }

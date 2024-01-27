@@ -61,7 +61,7 @@ const updateDoc = async(req, res) => {
     try{
         if(!req.auth) throw "Please login";
         const {employeeId, docType, status, feedback} = req.body;
-        const msg = await updateDocumentByEmployee(employeeId, docType, status, feedback);
+        const msg = await updateDocumentByEmployee(employeeId, +docType, +status, feedback);
         res.status(201).json({message: msg});
     }catch(err){
         console.log(err);
