@@ -122,7 +122,7 @@ const StatusCard = () => {
                             rows={4}
                             variant="outlined"
                             margin="normal"
-                            value="Please wait for HR to review your application."
+                            value={feedback}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -155,7 +155,7 @@ const StatusCard = () => {
                             rows={4}
                             variant="outlined"
                             margin="normal"
-                            value="Your application has been rejected. Please contact HR for more details."
+                            value={feedback}
                             InputProps={{
                                 readOnly: true,
                             }}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     TextField, Paper, Button, Radio, RadioGroup, FormControlLabel, FormControl,
     FormLabel, Grid, Select, MenuItem, Typography
@@ -6,10 +6,28 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {updateField, updateAvatar} from '../redux/personalInformationSlice.js';
 import Avatar from "@mui/material/Avatar";
+import {getJwtToken} from "../utils/jwtTokenUtils.js";
 
 const UserForm = () => {
     const dispatch = useDispatch();
     const formData = useSelector((state) => state.personalInformation);
+    const [userEmail, setUserEmail] = useState('');
+    useEffect(() => {
+        const getUserEmail = async () => {
+            try {
+                const token = getJwtToken();
+                if (token) {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    dispatch(updateField({field: 'email', value: payload.user.email}));
+                    setUserEmail(payload.user.email);
+                }
+            } catch (error) {
+                console.log('Token obtained failed:', error);
+            }
+        };
+
+        getUserEmail();
+    }, []);
     const handleUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -95,7 +113,7 @@ const UserForm = () => {
                             type="date"
                             name="dateOfBirth"
                             value={formatDateForInput(formData.dateOfBirth)}
-                            InputLabelProps={{ shrink: true }}
+                            InputLabelProps={{shrink: true}}
                             onChange={handleChange}
                         />
                     </Grid>
@@ -147,8 +165,10 @@ const UserForm = () => {
                         </Select>
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField fullWidth variant="outlined" label="Email" name="email" value={formData.email}
-                                   onChange={handleChange}/>
+                        <TextField fullWidth variant="outlined" label="Email" name="email" value={userEmail}
+                                   onChange={handleChange} InputProps={{
+                            readOnly: true,
+                        }}/>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField fullWidth variant="outlined" label="Home Telephone Number" name="homePhone"
