@@ -71,7 +71,9 @@ const NameSection = ({ data }) => {
         }
         setNameInfo({ ...nameInfo, [name]: formattedValue });
     };
-
+    const formatDateForInput = (isoDateString) => {
+        return isoDateString.split('T')[0];
+    };
     const renderField = (key, value) => {
         if (key === 'avatar') return null;
 
@@ -85,7 +87,7 @@ const NameSection = ({ data }) => {
             <TextField
                 key={key}
                 label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={value}
+                value={key === 'dateOfBirth' ?formatDateForInput(value):value }
                 name={key}
                 onChange={handleChange}
                 margin="normal"

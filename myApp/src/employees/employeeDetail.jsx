@@ -24,7 +24,9 @@ const UserForm = () => {
         const {name, value} = e.target;
         dispatch(updateField({field: name, value: value}));
     };
-
+    const formatDateForInput = (isoDateString) => {
+        return isoDateString.split('T')[0];
+    };
     return (
         <div>
             <Paper style={{margin: '15px', padding: '15px'}}>
@@ -86,9 +88,16 @@ const UserForm = () => {
                                    onChange={handleChange}/>
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <TextField fullWidth variant="outlined" label="Date of Birth" type="date" name="dateOfBirth"
-                                   value={formData.dateOfBirth} InputLabelProps={{shrink: true}}
-                                   onChange={handleChange}/>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            label="Date of Birth"
+                            type="date"
+                            name="dateOfBirth"
+                            value={formatDateForInput(formData.dateOfBirth)}
+                            InputLabelProps={{ shrink: true }}
+                            onChange={handleChange}
+                        />
                     </Grid>
 
                     <Grid item xs={12} md={6}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Paper, Typography, Box, Button, TextField } from '@mui/material';
+import {Container, Paper, Typography, Box, Button, TextField, CircularProgress} from '@mui/material';
 import { getJwtToken } from '../utils/jwtTokenUtils';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ const StatusCard = () => {
     const [feedback, setFeedback] = useState('');
     const navigate = useNavigate();
     const [userId, setUserId] = useState(null);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         async function fetchUserId() {
             const token = getJwtToken();
@@ -50,6 +51,7 @@ const StatusCard = () => {
                 const data = await response.json();
                 setStatus(data.applyStatus);
                 setFeedback(data.feedback);
+                setLoading(false);
                 if(data.applyStatus === "Approve"){
                     navigate('/home');
                 }
@@ -66,7 +68,14 @@ const StatusCard = () => {
         })();
 
     }, []);
-
+    if (loading) {
+        return (
+            <Container maxWidth="sm"
+                       style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
+                <CircularProgress/>
+            </Container>
+        );
+    }
     const handleCreateApplication = () => {
         navigate('/application');
     };

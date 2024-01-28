@@ -59,7 +59,7 @@ export default function SignUp() {
 
                 if (response.ok) {
                     const responseBody = await response.json();
-                    console.log(responseBody);
+                    // console.log(responseBody);
 
                     const tokenExpires = responseBody.tokenExpires;
 
@@ -67,6 +67,7 @@ export default function SignUp() {
 
                     const currentDate = new Date();
 
+                    setEmail(responseBody.email);
                     if (currentDate > expirationDate) {
                         console.error('Token has expired');
                         navigate('/404');
@@ -204,6 +205,9 @@ export default function SignUp() {
                                     onChange={handleEmailChange}
                                     error={emailError || !isEmailValid}
                                     helperText={!isEmailValid ? "Please enter a valid email." : (emailError ? emailHelperText : "")}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>

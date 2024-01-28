@@ -69,7 +69,9 @@ const WorkForm = () => {
             throw error;
         }
     }
-
+    const formatDateForInput = (isoDateString) => {
+        return isoDateString.split('T')[0];
+    };
     return (
         <div>
             <Paper style={{padding: '20px', margin: '20px auto', width: '800px', height: '500px', overflow: 'auto'}}>
@@ -129,11 +131,11 @@ const WorkForm = () => {
                                 )}
                                 <Grid container spacing={2}>
                                     <Grid item xs={6}>
-                                        <TextField type="date" label="Start Date" fullWidth name="startDate" value={formData.startDate} onChange={handleChange}
+                                        <TextField type="date" label="Start Date" fullWidth name="startDate" value={formatDateForInput(formData.startDate)} onChange={handleChange}
                                                    InputLabelProps={{shrink: true}}/>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <TextField type="date" label="End Date" fullWidth name="endDate" value={formData.endDate} onChange={handleChange}
+                                        <TextField type="date" label="End Date" fullWidth name="endDate" value={formatDateForInput(formData.endDate)} onChange={handleChange}
                                                    InputLabelProps={{shrink: true}}/>
                                     </Grid>
                                 </Grid>

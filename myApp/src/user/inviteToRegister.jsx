@@ -5,7 +5,9 @@ import {logIn} from "../redux/authActions.js";
 const InviteUser = () => {
     const [email, setEmail] = useState('');
     const [userName, setUserName] = useState('');
-
+    const [isEmailValid, setEmailValid] = useState(true);
+    const [emailError, setEmailError] = useState(false);
+    const [emailHelperText, setEmailHelperText] = useState("");
     const handleInvite = async () => {
         const userData = {
             email,
@@ -28,7 +30,11 @@ const InviteUser = () => {
             console.error('Server error', error);
         }
     };
-
+    const handleEmailChange = (event) => {
+        const newEmail = event.target.value;
+        setEmail(newEmail);
+        setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail));
+    };
     return (
         <Container maxWidth="sm">
             <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -36,11 +42,16 @@ const InviteUser = () => {
                     Invite User to Register
                 </Typography>
                 <TextField
-                    label="Email"
-                    variant="outlined"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    required
                     fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    error={emailError || !isEmailValid}
+                    helperText={!isEmailValid ? "Please enter a valid email." : (emailError ? emailHelperText : "")}
                 />
                 <TextField
                     label="Username"
