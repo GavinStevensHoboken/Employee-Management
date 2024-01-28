@@ -7,6 +7,8 @@ import ContactSection from "./ContactSection.jsx";
 import EmploymentSection from "./EmploymentSection.jsx";
 import EmergencyContactSection from "./EmergencySection.jsx";
 import DocumentSection from "./DocumentSection.jsx";
+import { useNavigate } from 'react-router-dom';
+import { fetchUserRole } from '../utils/userIdUtils.js';
 
 const PersonalInformationPage = () => {
     const [userData, setUserData] = useState({
@@ -17,7 +19,16 @@ const PersonalInformationPage = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
     useEffect(() => {
+
+        fetchUserRole()
+        .then(role => {
+            if (role === 'hr'){
+                navigate('/404');
+            }
+        })
+
         async function fetchUserId() {
             const token = getJwtToken();
             try {
@@ -39,6 +50,31 @@ const PersonalInformationPage = () => {
             } catch (error) {
                 console.error('Failed to fetch user ID:', error);
                 throw error;
+            }
+        }
+
+        async function fetchUserStatus() {
+            const token = getJwtToken();
+            try {
+                const response = await fetch('http://localhost:3001/api/users/getStatusAndFeedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+        
+                const data = await response.json();
+                const applyStatus = data.applyStatus
+                return applyStatus
+        
+            } catch (error) {
+                console.error('Failed to fetch user data:', error);
+                throw new Error(`Server error!`);
             }
         }
 
@@ -72,6 +108,12 @@ const PersonalInformationPage = () => {
 
         (async () => {
             try {
+                fetchUserStatus()
+                .then(status => {
+                    if (status !== "Approve"){
+                        navigate('/status')
+                    }
+                })
                 const userId = await fetchUserId();
                 await fetchUserData(userId);
             } catch (error) {

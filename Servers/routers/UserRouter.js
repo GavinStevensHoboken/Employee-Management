@@ -157,6 +157,7 @@ router.post('/getStatusAndFeedback', authVerifier, async (req, res) => {
     return res.status(200).json({ feedback: user.feedback, applyStatus: user.applyStatus });
 });
 
+
 router.post('/updateStatus', authVerifier, async (req, res) => {
     const { applyStatus } = req.body;
     const userId = req.user.id;
