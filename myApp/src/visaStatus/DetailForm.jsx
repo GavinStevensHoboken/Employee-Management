@@ -197,7 +197,7 @@ const UserInfoDialog = () => {
                         )}
                         {emergencyContact && emergencyContact.map((val) => {
                             return(
-                                <div key={val}>
+                                <div key={val._id}>
                                     {renderTextField("Emergency Contact First Name", val.firstName)}
                                     {renderTextField("Emergency Contact Middle Name", val.middleName)}
                                     {renderTextField("Emergency Contact Last Name", val.lastName)}
