@@ -77,7 +77,7 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
     const document = await Document.findOne({employee:employeeId});
     let result;
     if(docType === 4 && status === 1){
-        result = Document.findOneAndUpdate(
+        Document.findOneAndUpdate(
             {employee: employeeId},
             {$set: {[`${visas[docType]}.status`]:1},status:1, nextStep: 0}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
@@ -90,10 +90,23 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
          .catch((err) => {
             throw err;
          });
+
+         result = User.findOneAndUpdate(
+            {_id: employeeId},
+            {$set: {feedback: feedback}}, 
+            {new: true}
+        ).exec()
+         .then((updatedDoc) => {
+            console.log(updatedDoc);
+            return 'rejected';
+         })
+         .catch((err) => {
+            throw err;
+         });
     return result;
     }
     if(docType !== 4 && status === 1){
-        result = Document.findOneAndUpdate(
+        Document.findOneAndUpdate(
             {employee: employeeId},
             {$set: {[`${visas[docType]}.status`]:1, nextStep:docType+1}}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
@@ -106,6 +119,20 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
          .catch((err) => {
             throw err;
          });
+
+         result = User.findOneAndUpdate(
+            {_id: employeeId},
+            {$set: {feedback: feedback}}, 
+            {new: true}
+        ).exec()
+         .then((updatedDoc) => {
+            console.log(updatedDoc);
+            return 'rejected';
+         })
+         .catch((err) => {
+            throw err;
+         });
+         
          return result;
     }
     if(status === 2) {

@@ -22,7 +22,7 @@ const PdfViewer = ({ base64String }) => {
         )}
 
         {/* render this if we have pdfFile state null   */}
-        {!base64String&&<>No file is selected yet</>}
+        {!base64String&&<p style={{color:"red",font:"25px"}}>No file is selected or submitted</p>}
 
       </div>
   );
