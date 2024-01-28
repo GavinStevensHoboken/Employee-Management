@@ -53,7 +53,7 @@ const StatusCard = () => {
                 setFeedback(data.feedback);
                 setLoading(false);
                 if(data.applyStatus === "Approve"){
-                    navigate('/home');
+                    navigate('/profiles');
                 }
 
             } catch (error) {

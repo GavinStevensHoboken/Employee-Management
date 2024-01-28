@@ -39,7 +39,7 @@ export default function LogIn() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const userData = {
-            email: data.get('email'),
+            email: data.get('email').toLowerCase(),
             password: data.get('password')
         };
 
@@ -133,8 +133,13 @@ export default function LogIn() {
                             >
                                 Log In
                             </Button>
-                            <Grid container>
-                                <Grid item xs>
+                            <Grid container justifyContent="space-between">
+                                <Grid item xs={6} style={{ textAlign: 'left' }}>
+                                    <Link href="/inviteToRegister" variant="body2">
+                                        Register
+                                    </Link>
+                                </Grid>
+                                <Grid item xs={6} style={{ textAlign: 'right' }}>
                                     <Link href="#" variant="body2">
                                         Forgot password?
                                     </Link>

@@ -17,25 +17,34 @@ import PersonalInformationPage from "./user/PersonalInfo.jsx";
 import NotFoundPage from "./errorPage/404.jsx";
 import SummaryPage from "./user/summary.jsx";
 import ProtectedRoute from './utils/HRProtect.jsx';
+
 function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/registrations" element={<ProtectedRoute><LayoutWithNavBar><Registrations /></LayoutWithNavBar></ProtectedRoute>}/>
-                <Route path="/management" element={<ProtectedRoute><LayoutWithNavBar><ApplicationSummary /></LayoutWithNavBar></ProtectedRoute>}/>
-                <Route path="/management/:userId" element={<ProtectedRoute><LayoutWithNavBar><UserInfoDialog /></LayoutWithNavBar></ProtectedRoute>} />
-                <Route path="/visa" element={<LayoutWithNavBar><VisaStatusManagement /></LayoutWithNavBar>}/>
-                <Route path="/employees" element={<ProtectedRoute><LayoutWithNavBar><EmployeeProfiles/></LayoutWithNavBar></ProtectedRoute>} />
-                <Route path="/employees/:userId" element={<ProtectedRoute><LayoutWithNavBar><EmployeeProfilesDetails/></LayoutWithNavBar></ProtectedRoute>} />
-                <Route path="/register" element={<SignUp/>}/>
+                <Route element={<ProtectedRoute/>}>
+                    <Route path="/registrations" element={
+                        <ProtectedRoute><LayoutWithNavBar><Registrations/></LayoutWithNavBar></ProtectedRoute>}/>
+                    <Route path="/management" element={
+                        <ProtectedRoute><LayoutWithNavBar><ApplicationSummary/></LayoutWithNavBar></ProtectedRoute>}/>
+                    <Route path="/management/:userId" element={
+                        <ProtectedRoute><LayoutWithNavBar><UserInfoDialog/></LayoutWithNavBar></ProtectedRoute>}/>
+                    <Route path="/visa" element={<LayoutWithNavBar><VisaStatusManagement/></LayoutWithNavBar>}/>
+                    <Route path="/employees" element={
+                        <ProtectedRoute><LayoutWithNavBar><EmployeeProfiles/></LayoutWithNavBar></ProtectedRoute>}/>
+                    <Route path="/employees/:userId" element={
+                        <ProtectedRoute><LayoutWithNavBar><EmployeeProfilesDetails/></LayoutWithNavBar></ProtectedRoute>}/>
+                    <Route path="/status" element={<LayoutWithNavBar><StatusCard/></LayoutWithNavBar>}/>
+                    <Route path="/application" element={<LayoutWithNavBar><EmployeeForm/></LayoutWithNavBar>}/>
+                    <Route path="/visafiles" element={<LayoutWithNavBar><Visa/></LayoutWithNavBar>}/>
+                    <Route path="/profiles" element={<LayoutWithNavBar><PersonalInformationPage/></LayoutWithNavBar>}/>
+                    <Route path="/summary" element={<LayoutWithNavBar><SummaryPage/></LayoutWithNavBar>}/>
+                </Route>
                 <Route path="/login" element={<LogIn/>}/>
+                <Route path="/" element={<LogIn/>}/>
                 <Route path="/404" element={<LayoutWithNavBar><NotFoundPage/></LayoutWithNavBar>}/>
-                <Route path="/status" element={<LayoutWithNavBar><StatusCard/></LayoutWithNavBar>} />
-                <Route path="/application" element={<LayoutWithNavBar><EmployeeForm/></LayoutWithNavBar>} />
-                <Route path="/visafiles" element={<LayoutWithNavBar><Visa/></LayoutWithNavBar>}/>
-                <Route path="/profiles" element={<LayoutWithNavBar><PersonalInformationPage/></LayoutWithNavBar>}/>
-                <Route path="/summary" element={<LayoutWithNavBar><SummaryPage/></LayoutWithNavBar>}/>
-                <Route path="/inviteToRegister" element={<InviteUser/>} />
+                <Route path="/register" element={<SignUp/>}/>
+                <Route path="/inviteToRegister" element={<InviteUser/>}/>
             </Routes>
         </Router>
     )
