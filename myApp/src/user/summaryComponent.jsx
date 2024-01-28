@@ -4,7 +4,6 @@ import {Typography, Grid, Paper} from '@mui/material';
 import {logIn} from "../redux/authActions.js";
 
 const SummaryComponent = ({formData, workData, reference, emergencyContacts}) => {
-    console.log('emergencyContacts:', emergencyContacts, typeof emergencyContacts);
     const formatFieldName = (fieldName) => {
         return fieldName.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
     };
@@ -60,16 +59,11 @@ const SummaryComponent = ({formData, workData, reference, emergencyContacts}) =>
                     <Typography>Relationship: {reference.relationship}</Typography>
                     <Typography>Emergency Contacts:</Typography>
                     {Object.entries(emergencyContacts).map(([key, contact], index) => (
-                        <div container spacing={2} key={key} style={{ marginBottom: '10px' }}>
-                            {/* Emergency Contact Fields */}
-                            {Object.keys(contact).map((contactKey) => (
-                                <div key={index}>
-                                    <Typography>{contact.firstName} {contact.middleName} {contact.lastName}</Typography>
-                                    <Typography>Phone: {contact.phone}</Typography>
-                                    <Typography>Email: {contact.email}</Typography>
-                                    <Typography>Relationship: {contact.relationship}</Typography>
-                                </div>
-                            ))}
+                        <div key={key} style={{ marginBottom: '10px' }}>
+                            <Typography>{contact.firstName} {contact.middleName} {contact.lastName}</Typography>
+                            <Typography>Phone: {contact.phone}</Typography>
+                            <Typography>Email: {contact.email}</Typography>
+                            <Typography>Relationship: {contact.relationship}</Typography>
                         </div>
                     ))}
                 </Grid>

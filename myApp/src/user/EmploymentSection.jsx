@@ -54,18 +54,25 @@ const EmploymentSection = ({ data }) => {
             console.error('Save failed:', error);
         }
     };
-
+    const formatDateForInput = (isoDateString) => {
+        return isoDateString.split('T')[0];
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEmploymentInfo({ ...employmentInfo, [name]: value });
     };
 
     const renderField = (key, value) => {
+        let displayValue = value === undefined ? '' : value;
+        if (key === 'startDate' || key === 'endDate') {
+            const date = new Date(value);
+            displayValue = `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+        }
         return isEditing ? (
             <TextField
                 key={key}
                 label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-                value={value}
+                value={key === 'startDate' || key === 'endDate' ?formatDateForInput(value):value}
                 name={key}
                 onChange={handleChange}
                 margin="normal"
@@ -75,7 +82,7 @@ const EmploymentSection = ({ data }) => {
         ) : (
             <ListItem key={key} style={{ padding: '4px 0' }}>
                 <ListItemText
-                    primary={`${key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}: ${value}`}
+                    primary={`${key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}: ${displayValue}`}
                 />
             </ListItem>
         );

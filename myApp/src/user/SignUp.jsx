@@ -12,7 +12,7 @@ import FaceSharpIcon from '@mui/icons-material/FaceSharp';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {IconButton, InputAdornment } from '@mui/material';
+import {CircularProgress, IconButton, InputAdornment} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {useNavigate} from "react-router-dom";
@@ -46,7 +46,7 @@ export default function SignUp() {
     const navigate = useNavigate();
     let query = useQuery();
     let tokenName = query.get('token');
-
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         async function fetchData() {
             try {
@@ -59,7 +59,7 @@ export default function SignUp() {
 
                 if (response.ok) {
                     const responseBody = await response.json();
-                    console.log(responseBody);
+                    // console.log(responseBody);
 
                     const tokenExpires = responseBody.tokenExpires;
 
@@ -67,10 +67,12 @@ export default function SignUp() {
 
                     const currentDate = new Date();
 
+                    setEmail(responseBody.email);
                     if (currentDate > expirationDate) {
                         console.error('Token has expired');
                         navigate('/404');
                     }
+                    setLoading(false);
                 } else {
                     navigate('/404');
                     console.error('Response not OK', await response.text());
@@ -150,7 +152,14 @@ export default function SignUp() {
             setPasswordError(false);
         }
     };
-
+    if (loading) {
+        return (
+            <Container maxWidth="sm"
+                       style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
+                <CircularProgress/>
+            </Container>
+        );
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -196,6 +205,9 @@ export default function SignUp() {
                                     onChange={handleEmailChange}
                                     error={emailError || !isEmailValid}
                                     helperText={!isEmailValid ? "Please enter a valid email." : (emailError ? emailHelperText : "")}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
