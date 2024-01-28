@@ -24,7 +24,7 @@ function App() {
                 <Route path="/registrations" element={<ProtectedRoute><LayoutWithNavBar><Registrations /></LayoutWithNavBar></ProtectedRoute>}/>
                 <Route path="/management" element={<ProtectedRoute><LayoutWithNavBar><ApplicationSummary /></LayoutWithNavBar></ProtectedRoute>}/>
                 <Route path="/management/:userId" element={<ProtectedRoute><LayoutWithNavBar><UserInfoDialog /></LayoutWithNavBar></ProtectedRoute>} />
-                <Route path="/visa" element={<LayoutWithNavBar><VisaStatusManagement /></LayoutWithNavBar>}/>
+                <Route path="/visa" element={<ProtectedRoute><LayoutWithNavBar><VisaStatusManagement /></LayoutWithNavBar></ProtectedRoute>}/>
                 <Route path="/employees" element={<ProtectedRoute><LayoutWithNavBar><EmployeeProfiles/></LayoutWithNavBar></ProtectedRoute>} />
                 <Route path="/employees/:userId" element={<ProtectedRoute><LayoutWithNavBar><EmployeeProfilesDetails/></LayoutWithNavBar></ProtectedRoute>} />
                 <Route path="/register" element={<SignUp/>}/>

@@ -66,7 +66,7 @@ const UserInfoDialog = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ applyStatus: "Approved" })
+                body: JSON.stringify({ applyStatus: "Approve" })
             });
 
             if (!response.ok) {

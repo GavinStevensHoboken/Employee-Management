@@ -74,7 +74,7 @@ function NavBar() {
 
     const handleVisaSelf = () => {
         handleClose();
-        navigate('/visa')
+        navigate('/visafiles')
     }
 
     return (

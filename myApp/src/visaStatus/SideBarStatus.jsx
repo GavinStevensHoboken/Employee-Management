@@ -11,7 +11,7 @@ const Sidebar = ({ onFilterSelect }) => {
                 <ListItem button onClick={() => onFilterSelect('Pending')}>
                     <ListItemText primary="Pending" />
                 </ListItem>
-                <ListItem button onClick={() => onFilterSelect('Approved')}>
+                <ListItem button onClick={() => onFilterSelect('Approve')}>
                     <ListItemText primary="Approved" />
                 </ListItem>
                 <ListItem button onClick={() => onFilterSelect('Rejected')}>

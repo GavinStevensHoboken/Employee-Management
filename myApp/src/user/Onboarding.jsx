@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {Container, Paper, Typography, Box, Button, TextField, CircularProgress} from '@mui/material';
 import { getJwtToken } from '../utils/jwtTokenUtils';
 import { useNavigate } from 'react-router-dom';
+import { fetchUserRole } from '../utils/userIdUtils';
 
 const StatusCard = () => {
     const [status, setStatus] = useState('no');
@@ -10,6 +11,14 @@ const StatusCard = () => {
     const [userId, setUserId] = useState(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
+
+        fetchUserRole()
+        .then(role => {
+            if (role === 'hr') {
+                navigate('/employees')
+            }
+        })
+
         async function fetchUserId() {
             const token = getJwtToken();
             try {
@@ -66,6 +75,8 @@ const StatusCard = () => {
                 await fetchUserStatus();
 
         })();
+
+       
 
     }, []);
     if (loading) {

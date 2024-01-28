@@ -13,14 +13,18 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
+import { fetchUserRole } from '../../utils/userIdUtils';
+import { useNavigate } from 'react-router-dom';
 
 export default function Visa() {
     const [file, setFile] = useState(''); // For uploading
     const [view, setView] = useState(''); // For preview
+    const [role, setRole] = useState('');
     const [title, setTitle] = useState('Visa');
     const [enableForm, setEnableForm] = useState(true);
     const [docType, setDocType] = useState(undefined);
     const [pdfError, setPdfError]=useState('');
+    const navigate = useNavigate();
     // const visaType = {1:'receipt',2:'ead',3:'i983',4:'i20'};
     // const approalStatus = {0:'new',1:'approved',2:'submitted',3:'rejected'};
 
@@ -30,6 +34,13 @@ export default function Visa() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        fetchUserRole()
+        .then(role => {
+            if (role === "hr") {
+                navigate('/employees')
+            };
+        })
+
         dispatch(fetchDocument(getJwtToken()));
     }, [dispatch]);
 
@@ -111,7 +122,9 @@ export default function Visa() {
         //     setDocType(data.status);
         //     setTitle(visaType[data.status]);
         // }
+        
     }, [data])
+
 
     const allowedFiles = ['application/pdf'];
     const handleFileChange = (e) => {
