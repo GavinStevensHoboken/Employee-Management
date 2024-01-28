@@ -83,16 +83,19 @@ const EmployeeProfilesDetails = () => {
                                 {renderTextField("Relationship", reference.relationship)}
                             </div>
                         )}
-                        {emergencyContact && filterData(emergencyContact).map((contact, index) => (
-                            <div key={index}>
-                                {renderTextField("Emergency Contact First Name", contact.firstName)}
-                                {renderTextField("Emergency Contact Middle Name", contact.middleName)}
-                                {renderTextField("Emergency Contact Last Name", contact.lastName)}
-                                {renderTextField("Emergency Contact Phone", contact.phone)}
-                                {renderTextField("Emergency Contact Email", contact.email)}
-                                {renderTextField("Emergency Contact Relationship", contact.relationship)}
-                            </div>
-                        ))}
+                        {emergencyContact && emergencyContact.map((val) => {
+                            return(
+                                <div key={val}>
+                                    {renderTextField("Emergency Contact First Name", val.firstName)}
+                                    {renderTextField("Emergency Contact Middle Name", val.middleName)}
+                                    {renderTextField("Emergency Contact Last Name", val.lastName)}
+                                    {renderTextField("Emergency Contact Phone", val.phone)}
+                                    {renderTextField("Emergency Contact Email", val.email)}
+                                    {renderTextField("Emergency Contact Relationship", val.relationship)}
+                                </div>
+                            )
+                        })
+                        }
                     </Grid>
                 </Grid>
             </Paper>

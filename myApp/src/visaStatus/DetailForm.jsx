@@ -73,6 +73,19 @@ const UserInfoDialog = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
+            const res = await fetch(`http://localhost:3001/api/users/updateFeedback/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ feedback: "Your application has been approved!" })
+            }); 
+
+            if (!res.ok){
+                throw new Error(`HTTP error! Feedback status: ${res.status}`);
+            }
+
             navigate('/management')
         } catch (error) {
             console.error('There was an error updating the apply status', error);
@@ -182,16 +195,18 @@ const UserInfoDialog = () => {
                                 {renderTextField("Relationship", reference.relationship)}
                             </div>
                         )}
-                        {emergencyContact && filterData(emergencyContact).map((contact, index) => (
-                            <div key={index}>
-                                {renderTextField("Emergency Contact First Name", contact.firstName)}
-                                {renderTextField("Emergency Contact Middle Name", contact.middleName)}
-                                {renderTextField("Emergency Contact Last Name", contact.lastName)}
-                                {renderTextField("Emergency Contact Phone", contact.phone)}
-                                {renderTextField("Emergency Contact Email", contact.email)}
-                                {renderTextField("Emergency Contact Relationship", contact.relationship)}
-                            </div>
-                        ))}
+                        {emergencyContact && emergencyContact.map((val) => {
+                            return(
+                                <div key={val}>
+                                    {renderTextField("Emergency Contact First Name", val.firstName)}
+                                    {renderTextField("Emergency Contact Middle Name", val.middleName)}
+                                    {renderTextField("Emergency Contact Last Name", val.lastName)}
+                                    {renderTextField("Emergency Contact Phone", val.phone)}
+                                    {renderTextField("Emergency Contact Email", val.email)}
+                                    {renderTextField("Emergency Contact Relationship", val.relationship)}
+                                </div>
+                            )
+                        })}
                     </Grid>
                     {user && user.applyStatus === "Pending" ?  (<Button sx={{margin: '15px'}} onClick={() => handleFeedback()}>Give Feedback</Button>) : ('')}
                     {user && user.applyStatus === "Pending" ?  (<Button sx={{margin: '15px'}} onClick={() => handleApprove()}>Approve</Button>) : ('')}
