@@ -2,6 +2,7 @@
 import React from 'react';
 import {Typography, Grid, Paper} from '@mui/material';
 import {logIn} from "../redux/authActions.js";
+import { Link } from 'react-router-dom';
 
 const SummaryComponent = ({formData, workData, reference, emergencyContacts}) => {
     const formatFieldName = (fieldName) => {
@@ -48,6 +49,8 @@ const SummaryComponent = ({formData, workData, reference, emergencyContacts}) =>
                             );
                         }
                     })}
+                    <Typography>Document:</Typography>
+                    <Link to="/visafiles">Download document</Link>
                 </Grid>
 
                 <Grid item xs={12} md={4}>

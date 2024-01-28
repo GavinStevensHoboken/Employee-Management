@@ -156,6 +156,9 @@ export default function Visa() {
             alert('upload failed');
         }
     }
+    const handleGoBack = () => {
+        navigate(-1);
+    };
 
     return(
         <div style={{ marginTop: '64px' }}>
@@ -169,7 +172,7 @@ export default function Visa() {
         </form>}
         <br/>
         <div className="viewer">
-
+            <button type="button" onClick={handleGoBack}>back</button>
         {/* render this if we have a pdf file */}
         
         {view&&(
