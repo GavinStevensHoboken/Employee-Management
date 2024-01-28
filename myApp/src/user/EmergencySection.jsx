@@ -101,35 +101,42 @@ const EmergencyContactSection = ({data}) => {
 
     return (
         <Container maxWidth="sm">
-            {emergencyContacts.map((emergencyContact, index) => (
-                <Paper elevation={3} style={{padding: '20px', marginTop: '20px', maxWidth: '300px'}} key={index}>
-                    <Typography variant="h6" gutterBottom>
-                        Emergency Contact {index + 1}
-                    </Typography>
+            {emergencyContacts && emergencyContacts.length > 0 ? (
+                emergencyContacts.map((emergencyContact, index) => (
 
-                    <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-                        {Object.entries(emergencyContact).map(([key, value]) => renderField(key, value, index))}
-                    </Box>
+                    <Paper elevation={3} style={{padding: '20px', marginTop: '20px', maxWidth: '300px'}} key={index}>
+                        <Typography variant="h6" gutterBottom>
+                            Emergency Contact {index + 1}
+                        </Typography>
 
-                    <Box mt={2} display="flex" justifyContent="flex-end">
-                        {!isEditing[index] ? (
-                            <Button variant="contained" color="primary" onClick={() => handleEditClick(index)}>
-                                Edit
-                            </Button>
-                        ) : (
-                            <>
-                                <Button variant="outlined" color="secondary" onClick={() => handleCancelClick(index)}
-                                        style={{marginRight: '8px'}}>
-                                    Cancel
+                        <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+                            {Object.entries(emergencyContact).map(([key, value]) => renderField(key, value, index))}
+                        </Box>
+
+                        <Box mt={2} display="flex" justifyContent="flex-end">
+                            {!isEditing[index] ? (
+                                <Button variant="contained" color="primary" onClick={() => handleEditClick(index)}>
+                                    Edit
                                 </Button>
-                                <Button variant="contained" color="primary" onClick={() => handleSaveClick(index)}>
-                                    Save
-                                </Button>
-                            </>
-                        )}
-                    </Box>
-                </Paper>
-            ))}
+                            ) : (
+                                <>
+                                    <Button variant="outlined" color="secondary" onClick={() => handleCancelClick(index)}
+                                            style={{marginRight: '8px'}}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="contained" color="primary" onClick={() => handleSaveClick(index)}>
+                                        Save
+                                    </Button>
+                                </>
+                            )}
+                        </Box>
+                    </Paper>
+                ))
+            ) : (
+                <Typography variant="subtitle1" style={{ marginTop: '20px' }}>
+                    No emergency contacts available.
+                </Typography>
+            )}
         </Container>
     );
 };
