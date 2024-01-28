@@ -17,12 +17,12 @@ import PersonalInformationPage from "./user/PersonalInfo.jsx";
 import NotFoundPage from "./errorPage/404.jsx";
 import SummaryPage from "./user/summary.jsx";
 import ProtectedRoute from './utils/HRProtect.jsx';
-
+import ProtectedRouteForAll from './utils/ProtectedRoute.jsx'
 function App() {
     return (
         <Router>
             <Routes>
-                <Route element={<ProtectedRoute/>}>
+                <Route element={<ProtectedRouteForAll/>}>
                     <Route path="/registrations" element={
                         <ProtectedRoute><LayoutWithNavBar><Registrations/></LayoutWithNavBar></ProtectedRoute>}/>
                     <Route path="/management" element={
