@@ -10,7 +10,7 @@ const InviteUser = () => {
     const [emailHelperText, setEmailHelperText] = useState("");
     const handleInvite = async () => {
         const userData = {
-            email,
+            email : email.toLowerCase(),
             name: userName
         };
         try {
@@ -66,7 +66,7 @@ const InviteUser = () => {
                     onClick={handleInvite}
                     fullWidth
                 >
-                    Generate token and send email
+                    Send request
                 </Button>
             </Paper>
         </Container>
