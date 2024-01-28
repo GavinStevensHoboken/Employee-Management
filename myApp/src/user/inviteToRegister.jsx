@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Paper, TextField, Button, Typography } from '@mui/material';
 import {logIn} from "../redux/authActions.js";
+import {useNavigate} from "react-router-dom";
 
 const InviteUser = () => {
     const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ const InviteUser = () => {
     const [isEmailValid, setEmailValid] = useState(true);
     const [emailError, setEmailError] = useState(false);
     const [emailHelperText, setEmailHelperText] = useState("");
+    const navigate = useNavigate();
     const handleInvite = async () => {
         const userData = {
             email : email.toLowerCase(),
@@ -25,6 +27,8 @@ const InviteUser = () => {
             if (response.ok) {
                 const responseBody = await response.json();
                 console.log(responseBody);
+                alert('Send request successfully.');
+                navigate('/login');
             }
         } catch (error) {
             console.error('Server error', error);
