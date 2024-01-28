@@ -80,7 +80,7 @@ const Registrations = () => {
         .catch(error => {
             console.error('Fetch error:', error);
         });
-    },[data])
+    },[])
         
    
     return (

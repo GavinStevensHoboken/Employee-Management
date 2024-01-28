@@ -31,7 +31,6 @@ function NavBar() {
         }
     },[dispatch])
 
-    console.log(role);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -43,7 +42,7 @@ function NavBar() {
         if (isLoggedIn) {
             document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;';
             dispatch(logOut())
-            // navigate('/login');
+            navigate('/login');
         }else{
             navigate('/login');
         }
@@ -68,6 +67,16 @@ function NavBar() {
         navigate('/registrations');
     }
 
+    const handleProfile = () => {
+        handleClose();
+        navigate('/profiles')
+    }
+
+    const handleVisaSelf = () => {
+        handleClose();
+        navigate('/visa')
+    }
+
     return (
         <AppBar className="app-bar" position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Toolbar>
@@ -83,22 +92,44 @@ function NavBar() {
                         >
                             Menu
                         </Button>
-                        <Menu
-                            id="fade-menu"
-                            MenuListProps={{
-                            'aria-labelledby': 'fade-button',
-                            }}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            TransitionComponent={Fade}
-                            sx={{display: 'inline-flex'}}
-                        >
-                            <MenuItem onClick={handleEmployee}>Employee</MenuItem>
-                            <MenuItem onClick={handleVisa}>Visa</MenuItem>
-                            <MenuItem onClick={handleHiring}>Hiring</MenuItem>
-                            <MenuItem onClick={handleRegistration}>Registration</MenuItem>
-                        </Menu>
+                        
+                        { role && role === 'hr' ? 
+                            (
+                                <Menu
+                                    id="fade-menu"
+                                    MenuListProps={{
+                                    'aria-labelledby': 'fade-button',
+                                    }}
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    TransitionComponent={Fade}
+                                    sx={{display: 'inline-flex'}}
+                                >   
+                                    <MenuItem onClick={handleEmployee}>Employee Profiles</MenuItem>
+                                    <MenuItem onClick={handleVisa}>Visa Managment</MenuItem>
+                                    <MenuItem onClick={handleHiring}>Application Managment</MenuItem>
+                                    <MenuItem onClick={handleRegistration}>Registration Managment</MenuItem>
+                                </Menu>
+                            ) :
+                            (
+                                <Menu
+                                    id="fade-menu"
+                                    MenuListProps={{
+                                    'aria-labelledby': 'fade-button',
+                                    }}
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    TransitionComponent={Fade}
+                                    sx={{display: 'inline-flex'}}
+                                >   
+                                    <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                                    <MenuItem onClick={handleVisaSelf}>Visa</MenuItem>
+                                </Menu>
+                            )
+                        }
+                        
                 </Box>
                 <Button color="inherit" onClick={handleSign}>{isLoggedIn ? 'Sign Out' : 'Sign In'}</Button>
             </Toolbar>
