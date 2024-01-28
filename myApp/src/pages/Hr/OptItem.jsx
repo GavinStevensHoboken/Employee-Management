@@ -5,7 +5,7 @@ import axios from 'axios';
 import { getJwtToken } from '../../utils/jwtTokenUtils';
 
 const nextStepMap = {0:'Done',1:'opt receipt', 2: 'EAD card', 3: 'i983', 4:'i20', 5: 'Waiting for approval'};
-
+const msgByDocStep = {2: 'Please upload EAD card', 3: 'Please upload i983', 4:'Please upload i20', 5: 'Waiting for final approval'}
 
 const OptItem = ({employee}) => {
     const [open, setOpen] = useState(false);
@@ -41,13 +41,15 @@ const OptItem = ({employee}) => {
             formData.append('employeeId', employee.userId);
             formData.append('docType',docType);
             formData.append('status',1); // status 2 = reject for this api not dadabase
-            formData.append('feedback', '');
+            formData.append('feedback', msgByDocStep[docType+1]);
             axios.put("http://localhost:3001/api/updateFile", formData, {
                 headers:{
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
-            })
+            });
+            setEnableAction(false);
+            if(docType !== 4) setEnableNotification(true);
         }catch(error){
             alert('Action fails');
         }
@@ -87,6 +89,8 @@ const OptItem = ({employee}) => {
                     Authorization: `Bearer ${token}`
                 }
             })
+            setEnableAction(false);
+            setEnableNotification(true);
         }catch(error){
             alert('Action fails');
         }
@@ -150,7 +154,7 @@ const OptItem = ({employee}) => {
           {enableAction && <Button onClick={() => handleReject(employee)}>Reject</Button>}
           {enableNotification && (
             <Button
-              onClick={() => handleSendNotification("gavinnaknight@gmail.com")}
+              onClick={() => handleSendNotification(employee?.email)}
             >
               Send Notification
             </Button>

@@ -15,6 +15,11 @@ const store = configureStore({
         employeeProfiles: optHrReducer,
         referenceAndEmergencyContacts: referenceAndEmergencyContactsSlice
     },
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+        serializableCheck: false,
+    }),
+    
 });
 
 export default store;

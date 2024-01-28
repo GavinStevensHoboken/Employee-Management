@@ -117,7 +117,7 @@ const PersonalInformationPage = () => {
                             <EmploymentSection data={userData.work}/>
                         </Grid>
                         <Grid item xs={12}>
-                            {/*<DocumentSection data={userData.personal} />*/}
+                            <DocumentSection />
                         </Grid>
                     </Grid>
                 </Grid>

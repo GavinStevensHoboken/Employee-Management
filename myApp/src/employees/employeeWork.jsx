@@ -4,12 +4,13 @@ import {
 } from '@mui/material';
 import {useSelector, useDispatch} from 'react-redux';
 import {updateField} from '../redux/workInformationSlice.js';
+import {useNavigate} from "react-router-dom";
 
 const WorkForm = () => {
     const [showAdditionalFields, setShowAdditionalFields] = useState(false);
     const dispatch = useDispatch();
     const formData = useSelector((state) => state.workInformation);
-
+    const navigate = useNavigate();
     useEffect(()=>{
         if(formData.residencyStatus === 'no'){
             setShowAdditionalFields(true);
@@ -72,6 +73,10 @@ const WorkForm = () => {
     const formatDateForInput = (isoDateString) => {
         return isoDateString.split('T')[0];
     };
+
+    const handleNavigate = () => {
+        navigate('/visafiles'); // Use the navigate function to change the route
+    };
     return (
         <div>
             <Paper style={{padding: '20px', margin: '20px auto', width: '800px', height: '500px', overflow: 'auto'}}>
@@ -116,9 +121,12 @@ const WorkForm = () => {
                                 </RadioGroup>
                                 {formData.workAuthorization === 'F1(CPT/OPT)' && (
                                     <div style={{marginTop: '10px', marginBottom: '20px'}}>
-                                        <Button variant="contained" component="label">
+                                        {/*<Button variant="contained" component="label">*/}
+                                        {/*    Upload OPT Receipt*/}
+                                        {/*    <input type="file" hidden onChange={handleFileChange} name="optReceipt"/>*/}
+                                        {/*</Button>*/}
+                                        <Button variant="contained" component="label" onClick={handleNavigate}>
                                             Upload OPT Receipt
-                                            <input type="file" hidden onChange={handleFileChange} name="optReceipt"/>
                                         </Button>
                                         {formData.fileName && <span style={{marginLeft: '10px'}}>{formData.fileName}</span>}
                                     </div>
