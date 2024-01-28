@@ -4,13 +4,10 @@ import { fetchDocument } from '../../redux/visaOpt';
 import axios from 'axios';
 import { getJwtToken } from '../../utils/jwtTokenUtils';
 
-import { Viewer } from '@react-pdf-viewer/core';
-import {Worker} from '@react-pdf-viewer/core'
 import PdfViewer from './PdfViewer';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { fetchUserRole } from '../../utils/userIdUtils';
@@ -19,7 +16,6 @@ import { useNavigate } from 'react-router-dom';
 export default function Visa() {
     const [file, setFile] = useState(''); // For uploading
     const [view, setView] = useState(''); // For preview
-    const [role, setRole] = useState('');
     const [title, setTitle] = useState('Visa');
     const [enableForm, setEnableForm] = useState(true);
     const [docType, setDocType] = useState(undefined);
@@ -29,8 +25,8 @@ export default function Visa() {
     // const approalStatus = {0:'new',1:'approved',2:'submitted',3:'rejected'};
 
     const{
-        optDocument: {data}
-    } = useSelector((state) => state);
+        data
+    } = useSelector((state) => state.optDocument);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -38,7 +34,7 @@ export default function Visa() {
         .then(role => {
             if (role === "hr") {
                 navigate('/employees')
-            };
+            }
         })
 
         dispatch(fetchDocument(getJwtToken()));
@@ -113,15 +109,6 @@ export default function Visa() {
             }
             
         }
-        // const document = data && data['ead.link'];
-        // if (document && document['data']) {
-        //     setView(() => {
-        //         console.log('status');
-        //         console.log(data.status);
-        //         return document['data']['data']});  
-        //     setDocType(data.status);
-        //     setTitle(visaType[data.status]);
-        // }
         
     }, [data])
 

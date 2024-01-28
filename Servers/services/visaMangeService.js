@@ -1,5 +1,6 @@
 const Document = require('../models/Document');
 const File = require('../models/File');
+const User = require('../models/User');
 const _ = require('lodash');
 
 const visas = {1:'receipt',2:'ead',3:'i983',4:'i20'}; // mapping type number with visa
@@ -72,7 +73,7 @@ exports.getAllDocuments = async () => {
     return document;
 }
 //试验点
-exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback) => {
+exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback) => { //传进来的status1为同意，2为拒绝
     const document = await Document.findOne({employee:employeeId});
     let result;
     if(docType === 4 && status === 1){
@@ -108,12 +109,24 @@ exports.updateDocumentByEmployee = async (employeeId, docType, status, feedback)
          return result;
     }
     if(status === 2) {
-        result = Document.findOneAndUpdate(
+        Document.findOneAndUpdate(
             {employee: employeeId},
             {$set: {[`${visas[docType]}.status`]:3}, feedback: feedback}, //${visas[documentType]}.status: {0:'new',1:'approved',2:'submitted',3:'rejected'};
             {new: true}
         ).populate('employee')
          .exec()
+         .then((updatedDoc) => {
+            console.log(updatedDoc);
+            return 'rejected';
+         })
+         .catch((err) => {
+            throw err;
+         });
+         result = User.findOneAndUpdate(
+            {_id: employeeId},
+            {$set: {feedback: feedback}}, 
+            {new: true}
+        ).exec()
          .then((updatedDoc) => {
             console.log(updatedDoc);
             return 'rejected';

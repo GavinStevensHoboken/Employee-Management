@@ -150,7 +150,7 @@ const OptItem = ({employee}) => {
           {enableAction && <Button onClick={() => handleReject(employee)}>Reject</Button>}
           {enableNotification && (
             <Button
-              onClick={() => handleSendNotification("gavinnaknight@gmail.com")}
+              onClick={() => handleSendNotification(employee?.email)}
             >
               Send Notification
             </Button>
