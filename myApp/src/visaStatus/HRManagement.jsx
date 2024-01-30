@@ -19,10 +19,11 @@ const ApplicationSummary = () => {
     const filteredEmployees = personalList.filter(employee => {
         const firstName = employee.firstName;
         const lastName = employee.lastName;
+        const preferName = employee.preferName
         const keyword = searchTerm.toLowerCase();
         return firstName.toLowerCase().includes(keyword) ||
-                lastName.toLowerCase().includes(keyword) //||
-                //  (preferredName && preferredName.toLowerCase().includes(keyword));
+                lastName.toLowerCase().includes(keyword) ||
+                (preferName && preferName.toLowerCase().includes(keyword));
         }).sort((a, b) => {
             // Sort by lastName
             if (a.lastName < b.lastName) {
@@ -70,7 +71,7 @@ const ApplicationSummary = () => {
                                 key={person._id} 
                                 onClick={() => handleNameClick(person.userId)}
                             >
-                                <ListItemText primary={`${person.firstName} ${person.lastName}`} />
+                                <ListItemText primary={`${person.firstName} ${person.lastName} (${person.preferName})`} />
                             </ListItem>
                         ))}
                     </List>

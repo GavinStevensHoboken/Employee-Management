@@ -26,10 +26,11 @@ const EmployeeProfiles = () => {
     const filteredEmployees = employees.filter(employee => {
         const firstName = employee.firstName;
         const lastName = employee.lastName;
+        const preferName = employee.preferName
         const keyword = searchTerm.toLowerCase();
         return firstName.toLowerCase().includes(keyword) ||
-                lastName.toLowerCase().includes(keyword) //||
-                //  (preferredName && preferredName.toLowerCase().includes(keyword));
+                lastName.toLowerCase().includes(keyword) ||
+                (preferName && preferName.toLowerCase().includes(keyword));
         }).sort((a, b) => {
             // Sort by lastName
             if (a.lastName < b.lastName) {
