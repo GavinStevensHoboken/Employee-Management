@@ -5,6 +5,7 @@ import {
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {useSelector, useDispatch} from 'react-redux';
 import { updateReference, updateEmergencyContact, addEmergencyContact } from '../redux/referenceAndEmergencyContactsSlice.js';
+import ScrollToTop from "../utils/ScrollToTop.jsx";
 const ReferenceAndEmergencyContactsForm = () => {
 
     const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const ReferenceAndEmergencyContactsForm = () => {
         const { name, value } = e.target;
         dispatch(updateReference({ [name]: value }));
     };
-
+    ScrollToTop();
     const handleEmergencyContactChange = (index, e) => {
         const { name, value } = e.target;
         dispatch(updateEmergencyContact({ index, contact: { [name]: value } }));

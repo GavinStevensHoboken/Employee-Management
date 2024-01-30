@@ -3,6 +3,8 @@ import {Container, Paper, Typography, Box, Button, TextField, CircularProgress} 
 import { getJwtToken } from '../utils/jwtTokenUtils';
 import { useNavigate } from 'react-router-dom';
 import { fetchUserRole } from '../utils/userIdUtils';
+import {resetStepNum} from "../redux/actions/index.js";
+import {useDispatch} from "react-redux";
 
 const StatusCard = () => {
     const [status, setStatus] = useState('no');
@@ -10,6 +12,10 @@ const StatusCard = () => {
     const navigate = useNavigate();
     const [userId, setUserId] = useState(null);
     const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const handleReset = () => {
+        dispatch(resetStepNum());
+    };
     useEffect(() => {
 
         fetchUserRole()
@@ -77,7 +83,7 @@ const StatusCard = () => {
         })();
 
        
-
+        handleReset();
     }, []);
     if (loading) {
         return (

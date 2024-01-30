@@ -5,6 +5,7 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {updateField} from '../redux/workInformationSlice.js';
 import {useNavigate} from "react-router-dom";
+import ScrollToTop from "../utils/ScrollToTop.jsx";
 
 const WorkForm = () => {
     const [showAdditionalFields, setShowAdditionalFields] = useState(false);
@@ -16,6 +17,7 @@ const WorkForm = () => {
             setShowAdditionalFields(true);
         }
     }, [])
+    ScrollToTop();
     const handleResidencyStatusChange = (event) => {
         const {name, value} = event.target;
         setShowAdditionalFields(value === 'no');

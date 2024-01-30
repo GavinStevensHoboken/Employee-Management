@@ -12,8 +12,8 @@ import SummaryComponent from '../user/summaryComponent.jsx';
 import {updatePersonalInfo} from "../redux/personalInformationSlice.js";
 import {updateWorkInfo} from "../redux/workInformationSlice.js";
 import {updateEmergencyContacts, updateReferenceInfo} from "../redux/referenceAndEmergencyContactsSlice.js";
+import {decrementStepNum, resetStepNum, setStepNum} from "../redux/actions/index.js";
 const EmployeeForm = () => {
-    const [activeStep, setActiveStep] = useState(0);
     const formData = useSelector((state) => state.personalInformation);
     const workData = useSelector((state) => state.workInformation);
     const reference = useSelector(state => state.referenceAndEmergencyContacts.reference);
@@ -24,6 +24,15 @@ const EmployeeForm = () => {
     let query = useQuery();
     let id = query.get('id');
     const dispatch = useDispatch();
+    const stepNum = useSelector(state => state.stepNum.stepNum);
+    const [activeStep, setActiveStep] = useState(stepNum);
+
+    const incrementStep = () => {
+        dispatch(setStepNum(stepNum + 1));
+    };
+    const handleDecrement = () => {
+        dispatch(decrementStepNum());
+    };
     function useQuery() {
         return new URLSearchParams(useLocation().search);
     }
@@ -100,6 +109,7 @@ const EmployeeForm = () => {
     const handleNext = () => {
         const isValid = validateStep(activeStep);
         if (isValid) {
+            incrementStep();
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
     };
@@ -210,6 +220,7 @@ const EmployeeForm = () => {
         }
     };
     const handleBack = () => {
+        handleDecrement();
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
     const updateApplyStatus = async (newApplyStatus) => {
