@@ -16,6 +16,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { fetchUserRole } from '../../utils/userIdUtils';
 import { useNavigate } from 'react-router-dom';
+import ScrollToTop from "../../utils/ScrollToTop.jsx";
 
 
 
@@ -42,7 +43,7 @@ export default function Visa() {
 
         dispatch(fetchDocument(getJwtToken()));
     }, [dispatch]);
-
+    ScrollToTop();
     useEffect(() => {
         if(data){
             if(data.status === 1) 

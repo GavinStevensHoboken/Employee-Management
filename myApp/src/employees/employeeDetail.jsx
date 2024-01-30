@@ -7,6 +7,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {updateField, updateAvatar} from '../redux/personalInformationSlice.js';
 import Avatar from "@mui/material/Avatar";
 import {getJwtToken} from "../utils/jwtTokenUtils.js";
+import ScrollToTop from "../utils/ScrollToTop.jsx";
 
 const UserForm = () => {
     const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const UserForm = () => {
 
         getUserEmail();
     }, []);
+    ScrollToTop();
     const handleUpload = (event) => {
         const file = event.target.files[0];
         if (file) {

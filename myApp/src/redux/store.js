@@ -6,6 +6,7 @@ import optReducer from "./visaOpt";
 import optHrReducer from "./visaOptHrSlice.js";
 
 import referenceAndEmergencyContactsSlice from './referenceAndEmergencyContactsSlice.js'
+import stepNumReducer from "./stepNumReducer.js";
 const store = configureStore({
     reducer: {
         auth: authReducer,
@@ -13,7 +14,8 @@ const store = configureStore({
         workInformation: workInformationSlice,
         optDocument: optReducer,
         employeeProfiles: optHrReducer,
-        referenceAndEmergencyContacts: referenceAndEmergencyContactsSlice
+        referenceAndEmergencyContacts: referenceAndEmergencyContactsSlice,
+        stepNum: stepNumReducer,
     },
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
