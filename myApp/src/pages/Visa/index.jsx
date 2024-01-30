@@ -5,7 +5,6 @@ import axios from 'axios';
 import { getJwtToken } from '../../utils/jwtTokenUtils';
 
 import { Button, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
