@@ -80,23 +80,28 @@ exports.getAllProfiles = async () => {
                     endDate: '$dataB.endDate',
                     
                     remainingdays: {
-                        $round: [
+                        $max: [
+                            0,
                             {
-                              $divide: [
-                                {
-                                  $abs: {
-                                    $subtract: [
-                                      { $toDate: '$dataB.endDate' }, 
-                                      new Date() 
-                                    ]
-                                  }
-                                },
-                                24 * 60 * 60 * 1000 // Convert milliseconds to days
-                              ]
-                            },
-                            2 // Specify the number of decimal places
-                          ]
-                        }
+                                $round: [
+                                    {
+                                      $divide: [
+                                        {
+                                            $subtract: [
+                                              { $toDate: '$dataB.endDate' }, 
+                                              new Date() 
+                                            ]
+                                        },
+                                        24 * 60 * 60 * 1000 // Convert milliseconds to days
+                                      ]
+                                    },
+                                    2 // Specify the number of decimal places
+                                  ]
+                                
+                            }
+                        ]
+                    }
+                        
                 },
                 document:{
                     receipt:{
