@@ -4,6 +4,11 @@ import { fetchDocument } from '../../redux/visaOpt';
 import axios from 'axios';
 import { getJwtToken } from '../../utils/jwtTokenUtils';
 
+import { Button, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import PdfViewer from './PdfViewer';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -12,6 +17,8 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 import { fetchUserRole } from '../../utils/userIdUtils';
 import { useNavigate } from 'react-router-dom';
+
+
 
 export default function Visa() {
     const [file, setFile] = useState(''); // For uploading
@@ -24,11 +31,8 @@ export default function Visa() {
     // const visaType = {1:'receipt',2:'ead',3:'i983',4:'i20'};
     // const approalStatus = {0:'new',1:'approved',2:'submitted',3:'rejected'};
 
-    const{
-        data
-    } = useSelector((state) => state.optDocument);
+    const{ data } = useSelector((state) => state.optDocument);
     const dispatch = useDispatch();
-
     useEffect(() => {
         fetchUserRole()
         .then(role => {
@@ -134,7 +138,10 @@ export default function Visa() {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!file) alert('Please choose a file!');
+        if(!file){
+            alert('Please choose a file!');
+            return;
+        }
 
         const formData = new FormData();
         formData.append('file', file);
@@ -162,23 +169,28 @@ export default function Visa() {
 
     return(
         <div style={{ marginTop: '64px' }}>
-        <h1>{title}</h1>
-        {enableForm && <form onSubmit={handleSubmit}>
-            <div>
-                <input type="file" onChange={handleFileChange}></input>
-                <button type="submit">upload</button>
+            <div style={{ display: 'flex', gap: '2px', width: '5px', height: '10px', cursor:"pointer"}} onClick={handleGoBack}>
+            <ArrowBackIcon color='secondary' /> 
+            <p style={{margin:4,color:"#2566e8"}}> Back </p>
             </div>
+        <h1 style={{ color: "#111", fontFamily: 'Open Sans',fontSize: "30px", fontWeight: 300, lineHeight: "32px", margin: "20px 0 10px", textAlign: "left" }}>{title}</h1>
+        {enableForm && <form onSubmit={handleSubmit}>
+        <div style={{ display: 'flex', gap: '16px' }}>
+                {/* <input type="file" accept=".pdf" onChange={handleFileChange}></input>
+                <button type="submit">upload</button> */}
+                <TextField type="file" variant="filled" inputProps={{accept:"application/pdf"}} onChange={handleFileChange}></TextField>
+                <Button type="submit" variant='contained'>submit</Button>
+        </div>
             {pdfError&&<span className='text-danger'>{pdfError}</span>}
         </form>}
         <br/>
         <div className="viewer">
-            <button type="button" onClick={handleGoBack}>back</button>
         {/* render this if we have a pdf file */}
         
         {view&&(
           <PdfViewer base64String={view}/>
         )}
-        {!view&&<>No file is selected yet</>}
+        {!view&&<>    </>}
 
       </div>
         </ div>

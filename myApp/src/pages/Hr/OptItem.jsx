@@ -9,12 +9,11 @@ const msgByDocStep = {2: 'Please upload EAD card', 3: 'Please upload i983', 4:'P
 
 const OptItem = ({employee}) => {
     const [open, setOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [pdfFile, setPdfFile] = useState('');
     const [feedback, setFeedback] = useState('');
-    const [curDocType, setCurDocType] = useState(undefined);
+    const [nextStep, setNextStep] = useState(nextStepMap[employee?.nextStep]);
     const [enableNotification, setEnableNotification] = useState(false);
     const [enableAction, setEnableAction] = useState(undefined);
 
@@ -49,6 +48,9 @@ const OptItem = ({employee}) => {
                 }
             });
             setEnableAction(false);
+            if(docType !== 4){
+                setNextStep(nextStepMap[docType+1]);
+            }else setNextStep('None');
             if(docType !== 4) setEnableNotification(true);
         }catch(error){
             alert('Action fails');
@@ -148,7 +150,7 @@ const OptItem = ({employee}) => {
                 {employee.name.firstName}&nbsp;{employee.name.lastName}
               </MuiLink>
             }
-            secondary={`Next Step: ${nextStepMap[employee.nextStep]}`}
+            secondary={`Next Step: ${nextStep}`}
           />
           {enableAction && <Button onClick={() => handleApprove(employee)}>Approve</Button>}
           {enableAction && <Button onClick={() => handleReject(employee)}>Reject</Button>}
