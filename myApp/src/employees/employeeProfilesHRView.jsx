@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Grid, Typography, Paper, TextField, Container  } from '@mui/material';
 import { getJwtToken } from '../utils/jwtTokenUtils';
 
 const EmployeeProfilesDetails = () => {
     const [userInfo, setUserInfo] = useState(null);
     const { userId } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (userId) {
+            fetch(`http://localhost:3001/api/users/status/${userId}`)
+            .then(res => res.json())
+            .then(status => {
+                if (status !== 'Approve'){
+                    console.log(status);
+                    navigate('/404');
+                }
+            })
+            .catch(error => console.error('Error fetching user info:', error));
+
             fetch(`http://localhost:3001/api/applications/${userId}`)
                 .then(response => response.json())
                 .then(data => setUserInfo(data))

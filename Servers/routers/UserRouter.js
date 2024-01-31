@@ -157,6 +157,22 @@ router.post('/getStatusAndFeedback', authVerifier, async (req, res) => {
     return res.status(200).json({ feedback: user.feedback, applyStatus: user.applyStatus });
 });
 
+router.get('/status/:userId', authVerifier, async (req, res) => {
+    try{
+        const userId = req.params.userId;
+        const user = await User.findById(userId);
+        if (user) {
+            const userStatus = user.applyStatus;
+            res.json(userStatus);
+        }else{
+            res.status(500).json({message: 'User not found!'})
+        }
+    }catch(err){
+        console.error(err.message);
+        res.status(500).json({message: 'Server Side Error!'})
+    }
+})
+
 
 router.post('/updateStatus', authVerifier, async (req, res) => {
     const { applyStatus } = req.body;

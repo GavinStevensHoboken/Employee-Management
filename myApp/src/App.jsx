@@ -18,6 +18,8 @@ import NotFoundPage from "./errorPage/404.jsx";
 import SummaryPage from "./user/summary.jsx";
 import ProtectedRoute from './utils/HRProtect.jsx';
 import ProtectedRouteForAll from './utils/ProtectedRoute.jsx'
+import Home from './home/home.jsx';
+
 function App() {
     return (
         <Router>
@@ -41,7 +43,7 @@ function App() {
                     <Route path="/summary" element={<LayoutWithNavBar><SummaryPage/></LayoutWithNavBar>}/>
                 </Route>
                 <Route path="/login" element={<LogIn/>}/>
-                <Route path="/" element={<LogIn/>}/>
+                <Route path="/" element={<LayoutWithNavBar><Home/></LayoutWithNavBar>}/>
                 <Route path="/404" element={<LayoutWithNavBar><NotFoundPage/></LayoutWithNavBar>}/>
                 <Route path="/register" element={<SignUp/>}/>
                 <Route path="/inviteToRegister" element={<InviteUser/>}/>

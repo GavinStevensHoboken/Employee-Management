@@ -33,7 +33,6 @@ async function storeToken(email, token) {
     try {
         const expiryTime = new Date();
         expiryTime.setHours(expiryTime.getHours() + 3);
-
         const updateData = {
             token: token,
             createDate: new Date(),

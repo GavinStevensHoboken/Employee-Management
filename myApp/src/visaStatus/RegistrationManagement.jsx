@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { List, ListItem, ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions, Container } from '@mui/material';
 
-const GridList = ({ data }) => {
+const GridList = ({ data, onTokenGenerated}) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -24,6 +24,7 @@ const GridList = ({ data }) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
+        onTokenGenerated();
         setOpenDialog(false);
     };
 
@@ -42,7 +43,7 @@ const GridList = ({ data }) => {
                             <div>
                                 <p>Email: {selectedItem.email}</p>
                                 <p>Status: {selectedItem.status}</p>
-                                <p>Token: {selectedItem.token}</p>
+                                <p>Link: {selectedItem.token ? (`http://localhost:3000/register?token=${selectedItem.token}`) : ('')}</p>
                                 <p>Create Date: {new Date(selectedItem.createDate).toLocaleString()}</p>
                                 <p>Token Expires: {new Date(selectedItem.tokenExpires).toLocaleString()}</p>
                             </div>
@@ -62,6 +63,7 @@ const GridList = ({ data }) => {
 
 const Registrations = () => {
     const [data, setData] = useState([]);
+    const [refreshData, setRefreshData] = useState(false);
 
     useEffect(() => {
         fetch('http://localhost:3001/api/registration', {
@@ -79,13 +81,18 @@ const Registrations = () => {
         })
         .catch(error => {
             console.error('Fetch error:', error);
-        });
-    },[])
+        })
+        .finally(()=> setRefreshData(refreshData))
+    },[refreshData])
+
+    const handleTokenGenerated = () => {
+        setRefreshData(true); 
+    };
         
    
     return (
         <div style={{ marginTop: '64px' }}>
-            <GridList data={data} />
+            <GridList data={data} onTokenGenerated={handleTokenGenerated}/>
         </div>
     );
     
