@@ -71,7 +71,7 @@ exports.getAllProfiles = async () => {
         {
             $project: {
                 userId: 1,
-                name: {firstName: '$firstName', lastName: '$lastName',preferredName: '$preferredName'},
+                name: {firstName: '$firstName', lastName: '$lastName',preferName: '$preferName'},
                 ssn: '$dataB.ssn',
                 email: '$email',
                 employment: {
