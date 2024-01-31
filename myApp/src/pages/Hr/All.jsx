@@ -14,11 +14,11 @@ const All = () => {
 
     useEffect(() => {
         const result = employeeProfiles.filter(employee => {
-            const { firstName, lastName, preferredName } = employee.name;
+            const { firstName, lastName, preferName } = employee.name;
             const keyword = searchTerm.toLowerCase();
             return (firstName.toLowerCase().includes(keyword) ||
                    lastName.toLowerCase().includes(keyword) ||
-                   (preferredName && preferredName.toLowerCase().includes(keyword)));
+                   (preferName && preferName.toLowerCase().includes(keyword)));
           }).sort((a, b) => {
             // Sort by lastName
             if (a.name.lastName < b.name.lastName) {
