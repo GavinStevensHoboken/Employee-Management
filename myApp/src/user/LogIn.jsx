@@ -15,6 +15,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logIn } from '../redux/authActions';
+import { useEffect } from 'react';
+import { getJwtToken } from '../utils/jwtTokenUtils';
 
 function Copyright(props) {
     return (
@@ -34,6 +36,20 @@ const defaultTheme = createTheme();
 export default function LogIn() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        const CheckLogin = async () => {
+            const token = getJwtToken();
+            return token;
+        }
+
+        CheckLogin()
+        .then(token => {
+            if (token){
+                navigate('/');
+            }
+        })
+    },[])
 
     const handleSubmit = async (event) => {
         event.preventDefault();
