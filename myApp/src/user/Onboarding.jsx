@@ -21,7 +21,7 @@ const StatusCard = () => {
         fetchUserRole()
         .then(role => {
             if (role === 'hr') {
-                navigate('/employees')
+                navigate('/');
             }
         })
 
